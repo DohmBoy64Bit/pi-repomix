@@ -29,8 +29,8 @@ describe("config/defaults", () => {
 			expect(DEFAULT_IGNORE_PATTERNS).toContain("**/yarn.lock");
 		});
 
-		it("should export DEFAULT_OUTPUT_FILE as 'repomix-output.txt'", () => {
-			expect(DEFAULT_OUTPUT_FILE).toBe("repomix-output.txt");
+		it("should export DEFAULT_OUTPUT_FILE as 'repomix/repomix-output.txt'", () => {
+			expect(DEFAULT_OUTPUT_FILE).toBe("repomix/repomix-output.txt");
 		});
 
 		it("should export DEFAULT_OUTPUT_STYLE as 'plain'", () => {

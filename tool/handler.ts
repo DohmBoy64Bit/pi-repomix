@@ -4,9 +4,11 @@
  */
 
 import fs from "node:fs/promises";
+import fsSync from "node:fs";
 import path from "node:path";
 import type { RepomixConfigMerged } from "../config/types.js";
 import { loadConfig } from "../config/loader.js";
+import { resolveOutputPath } from "../utils/outputPath.js";
 import { searchFiles } from "../scan/fileSearch.js";
 import { readFilesInParallel } from "../scan/fileRead.js";
 import { processFiles, isDirectoryStructureOnly } from "../process/pipeline.js";
@@ -41,8 +43,18 @@ export async function executeRepomix(
 	// Handle directory parameter - override cwd if specified
 	const targetDir = args.directory || cwd;
 
+	// Resolve default output path if not explicitly provided
+	let outputFile: string | undefined;
+	if (args.output) {
+		outputFile = args.output;
+	} else {
+		outputFile = resolveOutputPath(targetDir);
+	}
+
 	// 1. Load configuration
-	const config = await loadConfig(targetDir, args);
+	// Pass the resolved outputFile to config overrides so it's used as the default
+	const configOverrides = { ...args, output: { ...args.output, filePath: outputFile } };
+	const config = await loadConfig(targetDir, configOverrides);
 
 	// 2. Search for files
 	const searchResult = await searchFiles(targetDir, config);
@@ -161,6 +173,10 @@ export async function executeRepomix(
 
 		warnings.push(`Output split into ${parts.length} files (exceeded ${config.output.splitOutput} bytes)`);
 	} else {
+		// Ensure output directory exists
+		const outputDir = path.dirname(outputPath);
+		fsSync.mkdirSync(outputDir, { recursive: true });
+
 		// Write single output file
 		await fs.writeFile(outputPath, output, "utf-8");
 	}

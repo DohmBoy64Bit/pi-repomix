@@ -26,7 +26,7 @@ describe("config/loader", () => {
 	describe("loadConfig", () => {
 		it("should return defaults when no config file exists", async () => {
 			const config = await loadConfig(testDir);
-			expect(config.output.filePath).toBe("repomix-output.txt");
+			expect(config.output.filePath).toBe("repomix/repomix-output.txt");
 			expect(config.output.style).toBe("plain");
 			expect(config.include).toEqual(["**/*"]);
 			expect(config.ignore.useGitignore).toBe(true);
@@ -77,7 +77,7 @@ describe("config/loader", () => {
 			writeFileSync(configPath, "{ invalid json }");
 
 			const loaded = await loadConfig(testDir);
-			expect(loaded.output.filePath).toBe("repomix-output.txt");
+			expect(loaded.output.filePath).toBe("repomix/repomix-output.txt");
 		});
 
 		it("should handle empty config file", async () => {
@@ -85,7 +85,7 @@ describe("config/loader", () => {
 			writeFileSync(configPath, "{}");
 
 			const loaded = await loadConfig(testDir);
-			expect(loaded.output.filePath).toBe("repomix-output.txt");
+			expect(loaded.output.filePath).toBe("repomix/repomix-output.txt");
 		});
 
 		it("should merge config with defaults", async () => {
@@ -240,7 +240,7 @@ describe("config/loader", () => {
 		it("should handle non-existent directory", async () => {
 			const nonExistentDir = join(testDir, "does-not-exist");
 			const loaded = await loadConfig(nonExistentDir);
-			expect(loaded.output.filePath).toBe("repomix-output.txt");
+			expect(loaded.output.filePath).toBe("repomix/repomix-output.txt");
 		});
 	});
 });

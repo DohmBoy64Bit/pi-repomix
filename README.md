@@ -158,6 +158,28 @@ Leverage git history for smarter output:
 }
 ```
 
+### 📂 Dynamic Output Filename
+
+By default, Repomix generates an output file with a dynamic name based on the repository:
+
+- **`repomix/<repo-name>-repomix.txt`**
+
+The repo name is resolved automatically using these sources (in order of priority):
+
+1. **`package.json`** name field (scoped packages like `@scope/name` become `scope-name`)
+2. **`.git/config`** remote URL (extracts `owner-repo` from `git@github.com:owner/repo.git`)
+3. **Directory name** as fallback
+
+You can also specify a custom output path:
+
+```json
+{
+  "output": {
+    "filePath": "custom-output.xml"
+  }
+}
+```
+
 ### 🎨 Multiple Output Formats
 
 Choose the format that best fits your workflow:
@@ -200,7 +222,7 @@ Create `.repomix.json` in your project root:
   --compress \
   --remove-comments \
   --git-include-diffs \
-  --output repomix-output.xml
+  --output repomix/custom-output.xml
 ```
 
 ---
@@ -248,7 +270,7 @@ Split large outputs into manageable chunks:
 }
 ```
 
-Creates `repomix-output-1.txt`, `repomix-output-2.txt`, etc.
+Creates `repomix/myproject-repomix-1.txt`, `repomix/myproject-repomix-2.txt`, etc. (based on the dynamic repo name).
 
 ### Custom Instructions
 

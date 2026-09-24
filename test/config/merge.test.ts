@@ -12,7 +12,7 @@ describe("config/merge", () => {
 			const result = mergeConfigs([]);
 
 			expect(result.input.maxFileSize).toBe(50_000_000);
-			expect(result.output.filePath).toBe("repomix-output.txt");
+			expect(result.output.filePath).toBe("repomix/repomix-output.txt");
 			expect(result.output.style).toBe("plain");
 			expect(result.output.parsableStyle).toBe(false);
 			expect(result.output.compress).toBe(false);
@@ -366,7 +366,7 @@ describe("config/merge", () => {
 		it("should handle empty config objects", () => {
 			const result = mergeConfigs([{}, {}, {}]);
 
-			expect(result.output.filePath).toBe("repomix-output.txt");
+			expect(result.output.filePath).toBe("repomix/repomix-output.txt");
 			expect(result.output.style).toBe("plain");
 			expect(result.include).toEqual(["**/*"]);
 		});

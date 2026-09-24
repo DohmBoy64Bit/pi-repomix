@@ -23,7 +23,7 @@ export const DEFAULT_IGNORE_PATTERNS = [
 	'**/.pnp.*',
 ];
 
-export const DEFAULT_OUTPUT_FILE = 'repomix-output.txt';
+export const DEFAULT_OUTPUT_FILE = 'repomix/repomix-output.txt';
 export const DEFAULT_OUTPUT_STYLE = 'plain' as const;
 export const DEFAULT_TOKEN_ENCODING = 'o200k_base';
 export const DEFAULT_MAX_FILE_SIZE = 50_000_000; // 50MB
