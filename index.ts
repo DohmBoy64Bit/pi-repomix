@@ -54,9 +54,12 @@ export default function (pi: ExtensionAPI): void {
 			async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
 				const dirResult = await resolveDirectory(params.directory || ctx.cwd);
 
+				// Override params.directory with cloned path so executeRepomix uses it
+				const execParams = { ...params, directory: dirResult.targetDir };
+
 				let result;
 				try {
-					result = await executeRepomix(params, dirResult.targetDir);
+					result = await executeRepomix(execParams, dirResult.targetDir);
 
 					// Cleanup cloned repo on success (default: true)
 					const shouldCleanup = params.cleanupRepo !== false;
