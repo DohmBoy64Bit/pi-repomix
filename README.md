@@ -1,6 +1,6 @@
-# Pi Repomix Extension
-
 <div align="center">
+
+# Pi Repomix Extension
 
 **Pack repository contents into a single AI-friendly file for LLM consumption**
 
