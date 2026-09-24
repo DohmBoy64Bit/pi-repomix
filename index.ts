@@ -134,7 +134,7 @@ export default function (pi: ExtensionAPI): void {
 	pi.registerCommand("repomix", {
 		description:
 			"Pack repository contents for AI consumption (Repomix). " +
-			"Usage: /repomix [url or directory] [--style xml|markdown|json|plain] [--compress] [--output path] [--ignore pattern] ...",
+			"Usage: /repomix [url or directory] [--style xml|markdown|json|plain] [--compress] [--output path] [--ignore pattern] [--cleanup-repo] [--no-cleanup-repo] ...",
 		handler: async (args, ctx) => {
 			await handleRepomixCommand(args, ctx);
 		},
