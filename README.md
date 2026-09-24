@@ -108,6 +108,7 @@ When a GitHub URL is provided:
   - `true` (default): removes the cloned repository on success
   - `false`: keeps the cloned repository for inspection
   - On failure: the repository is always left behind for debugging (regardless of `cleanupRepo` setting)
+- Output is saved to your **local directory** (`./repomix/<repo-name>-repomix.txt`), not the temp directory
 - Only GitHub URLs are supported (format: `https://github.com/owner/repo`)
 
 **CLI flag:** `--cleanup-repo` (default) / `--no-cleanup-repo`
@@ -191,7 +192,8 @@ Leverage git history for smarter output:
 
 By default, Repomix generates an output file with a dynamic name based on the repository:
 
-- **`repomix/<repo-name>-repomix.txt`**
+- **`<target-dir>/repomix/<repo-name>-repomix.txt`** (local directories)
+- **`./repomix/<repo-name>-repomix.txt`** (GitHub URLs — output always goes to your local directory)
 
 The repo name is resolved automatically using these sources (in order of priority):
 

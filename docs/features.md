@@ -479,6 +479,8 @@ Controls whether the cloned repository is removed after packing.
 
 **Note:** Only GitHub URLs are supported. Other Git hosting platforms are not recognized.
 
+**Output:** The output file is saved to your **local directory** (`./repomix/<repo-name>-repomix.txt`), not the cloned temp directory. Config is also loaded from your local directory.
+
 ### Configuration File Support
 
 Load configuration from project config files (JSON5 format):

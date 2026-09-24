@@ -347,8 +347,8 @@ The `--cleanup-repo` (default) and `--no-cleanup-repo` flags control cleanup beh
 When packing a remote GitHub repository, configuration is loaded from your **local directory** (where you run the command), not from the cloned temporary directory. This means:
 
 - Your local `.repomix.json` applies to the remote repo
-- Pass tool/CLI parameters to override config for specific remote repos
-- Use `output.filePath` to specify where to save the output (since the temp dir is cleaned up)
+- Output is saved to your **local directory** (`./repomix/<repo-name>-repomix.txt`), same as local repos
+- Pass tool/CLI parameters to override config or output path for specific remote repos
 
 ---
 
