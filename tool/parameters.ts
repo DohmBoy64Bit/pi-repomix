@@ -187,4 +187,12 @@ export const RepomixToolParameters = Type.Object({
 			description: "Path to a file containing custom instructions.",
 		}),
 	),
+
+	// GitHub URL support
+	cleanupRepo: Type.Optional(
+		Type.Boolean({
+			description:
+				"Automatically remove cloned repository after packing. Only applies when directory is a GitHub URL. Default: true.",
+		}),
+	),
 });

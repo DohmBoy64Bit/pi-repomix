@@ -26,6 +26,7 @@ import { defineTool, type ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { handleRepomixCommand } from "./command/handler.js";
 import { executeRepomix } from "./tool/handler.js";
 import { RepomixToolParameters } from "./tool/parameters.js";
+import { cleanupClone, resolveDirectory } from "./utils/gitClone.js";
 
 export default function (pi: ExtensionAPI): void {
 	// Register the repomix tool
@@ -51,11 +52,17 @@ export default function (pi: ExtensionAPI): void {
 			],
 			parameters: RepomixToolParameters,
 			async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
-				const targetDir = params.directory || ctx.cwd;
+				const dirResult = await resolveDirectory(params.directory || ctx.cwd);
 
 				let result;
 				try {
-					result = await executeRepomix(params, targetDir);
+					result = await executeRepomix(params, dirResult.targetDir);
+
+					// Cleanup cloned repo on success (default: true)
+					const shouldCleanup = params.cleanupRepo !== false;
+					if (shouldCleanup) {
+						await cleanupClone(dirResult);
+					}
 				} catch (error) {
 					const message =
 						error instanceof Error ? error.message : String(error);
@@ -68,7 +75,7 @@ export default function (pi: ExtensionAPI): void {
 						content: [
 							{
 								type: "text",
-								text: `Warning: Repository packed but no files were found in ${targetDir}`,
+								text: `Warning: Repository packed but no files were found in ${dirResult.targetDir}`,
 							},
 						],
 						details: { totalFiles: 0 },
