@@ -23,9 +23,9 @@
  */
 
 import { defineTool, type ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { RepomixToolParameters } from "./tool/parameters.js";
-import { executeRepomix } from "./tool/handler.js";
 import { handleRepomixCommand } from "./command/handler.js";
+import { executeRepomix } from "./tool/handler.js";
+import { RepomixToolParameters } from "./tool/parameters.js";
 
 export default function (pi: ExtensionAPI): void {
 	// Register the repomix tool
@@ -57,14 +57,20 @@ export default function (pi: ExtensionAPI): void {
 				try {
 					result = await executeRepomix(params, targetDir);
 				} catch (error) {
-					const message = error instanceof Error ? error.message : String(error);
+					const message =
+						error instanceof Error ? error.message : String(error);
 					throw new Error(`Repomix failed: ${message}`);
 				}
 
 				// Build result message
 				if (result.totalFiles === 0) {
 					return {
-						content: [{ type: "text", text: `Warning: Repository packed but no files were found in ${targetDir}` }],
+						content: [
+							{
+								type: "text",
+								text: `Warning: Repository packed but no files were found in ${targetDir}`,
+							},
+						],
 						details: { totalFiles: 0 },
 					};
 				}

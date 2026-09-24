@@ -79,7 +79,7 @@ async function loadRepomixignore(rootDir: string): Promise<string[]> {
 /**
  * Parse an ignore file and extract patterns.
  */
-function parseIgnoreFile(content: string, rootDir: string): string[] {
+function parseIgnoreFile(content: string, _rootDir: string): string[] {
 	return content
 		.split("\n")
 		.map((line) => line.trim())
@@ -94,7 +94,11 @@ function parseIgnoreFile(content: string, rootDir: string): string[] {
 			const cleanPattern = dirOnly ? pattern.slice(0, -1) : pattern;
 
 			// Normalize pattern
-			if (!cleanPattern.startsWith("**/") && !cleanPattern.startsWith("/") && !cleanPattern.includes("/")) {
+			if (
+				!cleanPattern.startsWith("**/") &&
+				!cleanPattern.startsWith("/") &&
+				!cleanPattern.includes("/")
+			) {
 				// Simple pattern like "node_modules" - match anywhere
 				return `**/${cleanPattern}`;
 			}
@@ -121,7 +125,9 @@ export function isPathIgnored(filePath: string, patterns: string[]): boolean {
 /**
  * Create an ignore filter function.
  */
-export function createIgnoreFilter(patterns: string[]): (filePath: string) => boolean {
+export function createIgnoreFilter(
+	patterns: string[],
+): (filePath: string) => boolean {
 	return (filePath: string) => isPathIgnored(filePath, patterns);
 }
 
@@ -142,7 +148,7 @@ export function shouldIgnore(path: string, patterns: string[]): boolean {
 
 		// Handle directory patterns (trailing /)
 		if (pattern.endsWith("/")) {
-			pattern = pattern.slice(0, -1) + "/**";
+			pattern = `${pattern.slice(0, -1)}/**`;
 		}
 
 		// Use case-sensitive matching (gitignore-style)

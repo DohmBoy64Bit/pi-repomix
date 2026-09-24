@@ -2,9 +2,13 @@
  * Tests for security scanner.
  */
 
-import { describe, it, expect } from "vitest";
-import { scanFileForSecurity, scanFilesForSecurity, generateSecurityReport } from "../../security/scanner.js";
+import { describe, expect, it } from "vitest";
 import type { RawFile } from "../../scan/types.js";
+import {
+	generateSecurityReport,
+	scanFileForSecurity,
+	scanFilesForSecurity,
+} from "../../security/scanner.js";
 
 describe("security/scanner", () => {
 	describe("scanFileForSecurity", () => {
@@ -179,7 +183,7 @@ const api_key = "abcdefghijklmnop";`,
 			const findings = scanFileForSecurity(file);
 
 			expect(findings.length).toBeGreaterThan(0);
-			expect(findings[0]!.line).toBeGreaterThan(0);
+			expect(findings[0]?.line).toBeGreaterThan(0);
 		});
 
 		it("should include severity in findings", () => {
@@ -192,8 +196,8 @@ const api_key = "abcdefghijklmnop";`,
 			const findings = scanFileForSecurity(file);
 
 			expect(findings.length).toBeGreaterThan(0);
-			expect(findings[0]!.severity).toBeDefined();
-			expect(["low", "medium", "high"]).toContain(findings[0]!.severity);
+			expect(findings[0]?.severity).toBeDefined();
+			expect(["low", "medium", "high"]).toContain(findings[0]?.severity);
 		});
 
 		it("should handle files with special characters", () => {
@@ -283,13 +287,17 @@ const githubToken = "ghp_ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefgh";`,
 			const results = scanFilesForSecurity(files);
 
 			expect(results).toHaveLength(1);
-			expect(results[0]!.findings.length).toBeGreaterThan(1);
+			expect(results[0]?.findings.length).toBeGreaterThan(1);
 		});
 
 		it("should preserve file paths in results", () => {
 			const files: RawFile[] = [
 				{ path: "clean.ts", content: "const x = 1;", language: "typescript" },
-				{ path: "secrets.ts", content: 'const api_key = "abcdefghijklmnop";', language: "typescript" },
+				{
+					path: "secrets.ts",
+					content: 'const api_key = "abcdefghijklmnop";',
+					language: "typescript",
+				},
 			];
 
 			const results = scanFilesForSecurity(files);

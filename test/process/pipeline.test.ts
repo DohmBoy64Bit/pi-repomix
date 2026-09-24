@@ -2,9 +2,13 @@
  * Tests for the processing pipeline.
  */
 
-import { describe, it, expect } from "vitest";
-import { processFiles, processFile, isDirectoryStructureOnly } from "../../process/pipeline.js";
+import { describe, expect, it } from "vitest";
 import type { RepomixConfigMerged } from "../../config/types.js";
+import {
+	isDirectoryStructureOnly,
+	processFile,
+	processFiles,
+} from "../../process/pipeline.js";
 import type { RawFile } from "../../scan/types.js";
 
 describe("process/pipeline", () => {
@@ -469,7 +473,11 @@ type User struct {
 					topFilesLength: 5,
 					showLineNumbers: false,
 					patterns: [
-						{ pattern: "**/*.test.ts", compress: false, directoryStructureOnly: true },
+						{
+							pattern: "**/*.test.ts",
+							compress: false,
+							directoryStructureOnly: true,
+						},
 					],
 					truncateBase64: false,
 					copyToClipboard: false,
@@ -830,11 +838,23 @@ line5`,
 
 		it("should handle files with different languages", async () => {
 			const files: RawFile[] = [
-				{ path: "app.ts", content: "const x: number = 1;", language: "typescript" },
-				{ path: "utils.py", content: "def add(a, b): return a + b", language: "python" },
+				{
+					path: "app.ts",
+					content: "const x: number = 1;",
+					language: "typescript",
+				},
+				{
+					path: "utils.py",
+					content: "def add(a, b): return a + b",
+					language: "python",
+				},
 				{ path: "server.go", content: "func main() {}", language: "go" },
 				{ path: "app.rs", content: "fn main() {}", language: "rust" },
-				{ path: "Main.java", content: "public class Main {}", language: "java" },
+				{
+					path: "Main.java",
+					content: "public class Main {}",
+					language: "java",
+				},
 			];
 
 			const config: RepomixConfigMerged = {
@@ -888,16 +908,18 @@ line5`,
 	describe("isDirectoryStructureOnly", () => {
 		it("should return true when pattern has directoryStructureOnly set", () => {
 			const patterns = [
-				{ pattern: "**/*.test.ts", compress: false, directoryStructureOnly: true },
+				{
+					pattern: "**/*.test.ts",
+					compress: false,
+					directoryStructureOnly: true,
+				},
 			];
 
 			expect(isDirectoryStructureOnly("test.test.ts", patterns)).toBe(true);
 		});
 
 		it("should return false when pattern does not have directoryStructureOnly set", () => {
-			const patterns = [
-				{ pattern: "**/*.ts", compress: true },
-			];
+			const patterns = [{ pattern: "**/*.ts", compress: true }];
 
 			expect(isDirectoryStructureOnly("test.ts", patterns)).toBe(false);
 		});

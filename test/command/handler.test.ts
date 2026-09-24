@@ -2,7 +2,7 @@
  * Tests for command handler.
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { handleRepomixCommand } from "../../command/handler.js";
 
 // Mock the tool/handler module
@@ -62,7 +62,10 @@ describe("command/handler", () => {
 				totalLines: 100,
 				outputSize: 5000,
 				splitFiles: ["/output/repomix-output.txt"],
-				warnings: ["File too large: large.js", "Binary file skipped: image.png"],
+				warnings: [
+					"File too large: large.js",
+					"Binary file skipped: image.png",
+				],
 				skippedFiles: [],
 			});
 
@@ -81,7 +84,10 @@ describe("command/handler", () => {
 				totalTokens: 50000,
 				totalLines: 10000,
 				outputSize: 1000000,
-				splitFiles: ["/output/repomix-output-1.txt", "/output/repomix-output-2.txt"],
+				splitFiles: [
+					"/output/repomix-output-1.txt",
+					"/output/repomix-output-2.txt",
+				],
 				warnings: ["Output split into 2 files"],
 				skippedFiles: [],
 			});

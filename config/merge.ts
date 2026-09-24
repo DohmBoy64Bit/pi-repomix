@@ -3,14 +3,16 @@
  * Deep-merges config sources, with later sources overriding earlier ones.
  */
 
-import type { RepomixConfig, RepomixConfigMerged } from "./types.js";
 import { DEFAULTS } from "./defaults.js";
+import type { RepomixConfig, RepomixConfigMerged } from "./types.js";
 
 /**
  * Deep merge multiple config objects. Later objects override earlier ones.
  * Arrays are replaced (not concatenated) for most fields.
  */
-export function mergeConfigs(sources: Partial<RepomixConfig>[]): RepomixConfigMerged {
+export function mergeConfigs(
+	sources: Partial<RepomixConfig>[],
+): RepomixConfigMerged {
 	const result: Partial<RepomixConfigMerged> = {};
 
 	for (const source of sources) {
@@ -95,7 +97,8 @@ function applyDefaults(config: RepomixConfigMerged): RepomixConfigMerged {
 			instructionFilePath: output.instructionFilePath,
 			git: {
 				sortByChanges: git.sortByChanges ?? false,
-				sortByChangesMaxCommits: git.sortByChangesMaxCommits ?? DEFAULTS.sortByChangesMaxCommits,
+				sortByChangesMaxCommits:
+					git.sortByChangesMaxCommits ?? DEFAULTS.sortByChangesMaxCommits,
 				includeDiffs: git.includeDiffs ?? false,
 				includeLogs: git.includeLogs ?? false,
 				includeLogsCount: git.includeLogsCount ?? DEFAULTS.includeLogsCount,

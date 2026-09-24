@@ -2,7 +2,7 @@
  * Tests for output generator.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { generateOutput } from "../../output/generator.js";
 import type { ProcessedFile } from "../../process/pipeline.js";
 
@@ -17,7 +17,8 @@ describe("output/generator", () => {
 		},
 		{
 			path: "src/utils.ts",
-			content: "export function add(a: number, b: number): number {\n\treturn a + b;\n}",
+			content:
+				"export function add(a: number, b: number): number {\n\treturn a + b;\n}",
 			language: "typescript",
 			tokens: 15,
 			lines: 3,
@@ -53,7 +54,11 @@ describe("output/generator", () => {
 				},
 				input: { maxFileSize: 50_000_000 },
 				include: ["**/*"],
-				ignore: { useGitignore: true, useDefaultPatterns: true, customPatterns: [] },
+				ignore: {
+					useGitignore: true,
+					useDefaultPatterns: true,
+					customPatterns: [],
+				},
 				security: { enableSecurityCheck: true },
 				tokenCount: { encoding: "o200k_base" },
 			});
@@ -91,7 +96,11 @@ describe("output/generator", () => {
 				},
 				input: { maxFileSize: 50_000_000 },
 				include: ["**/*"],
-				ignore: { useGitignore: true, useDefaultPatterns: true, customPatterns: [] },
+				ignore: {
+					useGitignore: true,
+					useDefaultPatterns: true,
+					customPatterns: [],
+				},
 				security: { enableSecurityCheck: true },
 				tokenCount: { encoding: "o200k_base" },
 			});
@@ -130,7 +139,11 @@ describe("output/generator", () => {
 				},
 				input: { maxFileSize: 50_000_000 },
 				include: ["**/*"],
-				ignore: { useGitignore: true, useDefaultPatterns: true, customPatterns: [] },
+				ignore: {
+					useGitignore: true,
+					useDefaultPatterns: true,
+					customPatterns: [],
+				},
 				security: { enableSecurityCheck: true },
 				tokenCount: { encoding: "o200k_base" },
 			});
@@ -168,7 +181,11 @@ describe("output/generator", () => {
 				},
 				input: { maxFileSize: 50_000_000 },
 				include: ["**/*"],
-				ignore: { useGitignore: true, useDefaultPatterns: true, customPatterns: [] },
+				ignore: {
+					useGitignore: true,
+					useDefaultPatterns: true,
+					customPatterns: [],
+				},
 				security: { enableSecurityCheck: true },
 				tokenCount: { encoding: "o200k_base" },
 			});
@@ -209,7 +226,11 @@ describe("output/generator", () => {
 				},
 				input: { maxFileSize: 50_000_000 },
 				include: ["**/*"],
-				ignore: { useGitignore: true, useDefaultPatterns: true, customPatterns: [] },
+				ignore: {
+					useGitignore: true,
+					useDefaultPatterns: true,
+					customPatterns: [],
+				},
 				security: { enableSecurityCheck: true },
 				tokenCount: { encoding: "o200k_base" },
 			});
@@ -247,7 +268,11 @@ describe("output/generator", () => {
 				},
 				input: { maxFileSize: 50_000_000 },
 				include: ["**/*"],
-				ignore: { useGitignore: true, useDefaultPatterns: true, customPatterns: [] },
+				ignore: {
+					useGitignore: true,
+					useDefaultPatterns: true,
+					customPatterns: [],
+				},
 				security: { enableSecurityCheck: true },
 				tokenCount: { encoding: "o200k_base" },
 			});
@@ -283,7 +308,11 @@ describe("output/generator", () => {
 				},
 				input: { maxFileSize: 50_000_000 },
 				include: ["**/*"],
-				ignore: { useGitignore: true, useDefaultPatterns: true, customPatterns: [] },
+				ignore: {
+					useGitignore: true,
+					useDefaultPatterns: true,
+					customPatterns: [],
+				},
 				security: { enableSecurityCheck: true },
 				tokenCount: { encoding: "o200k_base" },
 			});
@@ -293,10 +322,34 @@ describe("output/generator", () => {
 
 		it("should handle files with different languages", async () => {
 			const files: ProcessedFile[] = [
-				{ path: "app.ts", content: "const x = 1;", language: "typescript", tokens: 5, lines: 1 },
-				{ path: "script.py", content: "x = 1", language: "python", tokens: 3, lines: 1 },
-				{ path: "server.go", content: "func main() {}", language: "go", tokens: 5, lines: 1 },
-				{ path: "style.css", content: "body { margin: 0; }", language: "css", tokens: 5, lines: 1 },
+				{
+					path: "app.ts",
+					content: "const x = 1;",
+					language: "typescript",
+					tokens: 5,
+					lines: 1,
+				},
+				{
+					path: "script.py",
+					content: "x = 1",
+					language: "python",
+					tokens: 3,
+					lines: 1,
+				},
+				{
+					path: "server.go",
+					content: "func main() {}",
+					language: "go",
+					tokens: 5,
+					lines: 1,
+				},
+				{
+					path: "style.css",
+					content: "body { margin: 0; }",
+					language: "css",
+					tokens: 5,
+					lines: 1,
+				},
 			];
 
 			const result = await generateOutput(files, {
@@ -326,7 +379,11 @@ describe("output/generator", () => {
 				},
 				input: { maxFileSize: 50_000_000 },
 				include: ["**/*"],
-				ignore: { useGitignore: true, useDefaultPatterns: true, customPatterns: [] },
+				ignore: {
+					useGitignore: true,
+					useDefaultPatterns: true,
+					customPatterns: [],
+				},
 				security: { enableSecurityCheck: true },
 				tokenCount: { encoding: "o200k_base" },
 			});
@@ -365,7 +422,11 @@ describe("output/generator", () => {
 				},
 				input: { maxFileSize: 50_000_000 },
 				include: ["**/*"],
-				ignore: { useGitignore: true, useDefaultPatterns: true, customPatterns: [] },
+				ignore: {
+					useGitignore: true,
+					useDefaultPatterns: true,
+					customPatterns: [],
+				},
 				security: { enableSecurityCheck: true },
 				tokenCount: { encoding: "o200k_base" },
 			});
@@ -401,7 +462,11 @@ describe("output/generator", () => {
 				},
 				input: { maxFileSize: 50_000_000 },
 				include: ["**/*"],
-				ignore: { useGitignore: true, useDefaultPatterns: true, customPatterns: [] },
+				ignore: {
+					useGitignore: true,
+					useDefaultPatterns: true,
+					customPatterns: [],
+				},
 				security: { enableSecurityCheck: true },
 				tokenCount: { encoding: "o200k_base" },
 			});
@@ -415,7 +480,7 @@ describe("output/generator", () => {
 			const files: ProcessedFile[] = [
 				{
 					path: "special.ts",
-					content: 'const x = special chars',
+					content: "const x = special chars",
 					language: "typescript",
 					tokens: 5,
 					lines: 1,
@@ -449,7 +514,11 @@ describe("output/generator", () => {
 				},
 				input: { maxFileSize: 50_000_000 },
 				include: ["**/*"],
-				ignore: { useGitignore: true, useDefaultPatterns: true, customPatterns: [] },
+				ignore: {
+					useGitignore: true,
+					useDefaultPatterns: true,
+					customPatterns: [],
+				},
 				security: { enableSecurityCheck: true },
 				tokenCount: { encoding: "o200k_base" },
 			});
@@ -461,7 +530,7 @@ describe("output/generator", () => {
 			const files: ProcessedFile[] = [
 				{
 					path: "unicode.ts",
-					content: "const x = \"你好世界 🎉\";",
+					content: 'const x = "你好世界 🎉";',
 					language: "typescript",
 					tokens: 5,
 					lines: 1,
@@ -495,7 +564,11 @@ describe("output/generator", () => {
 				},
 				input: { maxFileSize: 50_000_000 },
 				include: ["**/*"],
-				ignore: { useGitignore: true, useDefaultPatterns: true, customPatterns: [] },
+				ignore: {
+					useGitignore: true,
+					useDefaultPatterns: true,
+					customPatterns: [],
+				},
 				security: { enableSecurityCheck: true },
 				tokenCount: { encoding: "o200k_base" },
 			});
@@ -542,7 +615,11 @@ describe("output/generator", () => {
 				},
 				input: { maxFileSize: 50_000_000 },
 				include: ["**/*"],
-				ignore: { useGitignore: true, useDefaultPatterns: true, customPatterns: [] },
+				ignore: {
+					useGitignore: true,
+					useDefaultPatterns: true,
+					customPatterns: [],
+				},
 				security: { enableSecurityCheck: true },
 				tokenCount: { encoding: "o200k_base" },
 			});

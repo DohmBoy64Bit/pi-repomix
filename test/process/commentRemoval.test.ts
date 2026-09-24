@@ -2,7 +2,7 @@
  * Tests for comment removal.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { removeComments } from "../../process/commentRemoval.js";
 
 describe("process/commentRemoval", () => {
@@ -132,7 +132,7 @@ echo "hello" # inline`;
 				const result = removeComments(input, "shell");
 
 				expect(result).not.toContain("# This is a comment");
-				expect(result).toContain("echo \"hello\"");
+				expect(result).toContain('echo "hello"');
 			});
 
 			it("should remove PowerShell comments", () => {

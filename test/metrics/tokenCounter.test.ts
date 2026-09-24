@@ -2,8 +2,8 @@
  * Tests for token counting.
  */
 
-import { describe, it, expect } from "vitest";
-import { countTokens, countFileTokens } from "../../metrics/tokenCounter.js";
+import { describe, expect, it } from "vitest";
+import { countFileTokens, countTokens } from "../../metrics/tokenCounter.js";
 
 describe("metrics/tokenCounter", () => {
 	describe("countTokens", () => {
@@ -41,7 +41,9 @@ describe("metrics/tokenCounter", () => {
 		});
 
 		it("should handle long text", async () => {
-			const longText = "The quick brown fox jumps over the lazy dog. ".repeat(100);
+			const longText = "The quick brown fox jumps over the lazy dog. ".repeat(
+				100,
+			);
 			const tokens = await countTokens(longText);
 			expect(tokens).toBeGreaterThan(10);
 			expect(tokens).toBeLessThan(10000);
@@ -125,7 +127,10 @@ const x = 1;
 
 		it("should scale with input size", async () => {
 			const short = "const x = 1;";
-			const long = "const x = 1;\nconst y = 2;\nconst z = 3;\nconst a = 4;\nconst b = 5;".repeat(10);
+			const long =
+				"const x = 1;\nconst y = 2;\nconst z = 3;\nconst a = 4;\nconst b = 5;".repeat(
+					10,
+				);
 
 			const shortTokens = await countTokens(short);
 			const longTokens = await countTokens(long);
@@ -198,9 +203,7 @@ struct User {
 		});
 
 		it("should return consistent results for same input", async () => {
-			const files = [
-				{ path: "file.ts", content: "const x = 1;" },
-			];
+			const files = [{ path: "file.ts", content: "const x = 1;" }];
 
 			const map1 = await countFileTokens(files);
 			const map2 = await countFileTokens(files);
@@ -216,7 +219,13 @@ struct User {
 		it("should handle files with different content sizes", async () => {
 			const files = [
 				{ path: "small.ts", content: "x = 1;" },
-				{ path: "large.ts", content: "const x = 1;\nconst y = 2;\nconst z = 3;\nconst a = 4;\nconst b = 5;".repeat(10) },
+				{
+					path: "large.ts",
+					content:
+						"const x = 1;\nconst y = 2;\nconst z = 3;\nconst a = 4;\nconst b = 5;".repeat(
+							10,
+						),
+				},
 			];
 
 			const tokenMap = await countFileTokens(files);
@@ -240,9 +249,7 @@ struct User {
 		});
 
 		it("should handle files with unicode content", async () => {
-			const files = [
-				{ path: "unicode.ts", content: "const x = \"你好世界\";" },
-			];
+			const files = [{ path: "unicode.ts", content: 'const x = "你好世界";' }];
 
 			const tokenMap = await countFileTokens(files);
 
@@ -291,7 +298,12 @@ struct User {
 
 		it("should handle files with binary-like content", async () => {
 			const files = [
-				{ path: "binary.ts", content: Array.from({ length: 100 }, () => String.fromCharCode(Math.floor(Math.random() * 256))).join("") },
+				{
+					path: "binary.ts",
+					content: Array.from({ length: 100 }, () =>
+						String.fromCharCode(Math.floor(Math.random() * 256)),
+					).join(""),
+				},
 			];
 
 			const tokenMap = await countFileTokens(files);
@@ -300,9 +312,7 @@ struct User {
 		});
 
 		it("should handle files with very long lines", async () => {
-			const files = [
-				{ path: "long.ts", content: "x".repeat(10000) },
-			];
+			const files = [{ path: "long.ts", content: "x".repeat(10000) }];
 
 			const tokenMap = await countFileTokens(files);
 

@@ -10,15 +10,18 @@ export function generateJson(context: OutputContext): string {
 	// File summary
 	if (context.fileSummary) {
 		output.fileSummary = {
-			generationHeader: "This file is a merged representation of the entire codebase, combined into a single document by Pi Repomix.",
+			generationHeader:
+				"This file is a merged representation of the entire codebase, combined into a single document by Pi Repomix.",
 			generationDate: context.generationDate,
 			statistics: {
 				totalFiles: context.totalFiles,
 				totalLines: context.totalLines,
 				totalTokens: context.totalTokens,
 			},
-			purpose: "This file contains a packed representation of the entire repository's contents, organized for easy parsing by AI tools.",
-			fileFormat: "Files are stored as key-value pairs where the key is the relative file path and the value is the file content.",
+			purpose:
+				"This file contains a packed representation of the entire repository's contents, organized for easy parsing by AI tools.",
+			fileFormat:
+				"Files are stored as key-value pairs where the key is the relative file path and the value is the file content.",
 			usageGuidelines: [
 				"This file should be treated as read-only.",
 				"File paths are relative to the repository root.",

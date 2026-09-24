@@ -3,7 +3,7 @@
  */
 
 import { execSync } from "node:child_process";
-import { rmSync, existsSync, readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
 
 /**
@@ -34,7 +34,9 @@ export function ensureTestRepo(): string {
 /**
  * Read all files in a directory recursively.
  */
-export function readAllFiles(dir: string): Array<{ path: string; content: string }> {
+export function readAllFiles(
+	dir: string,
+): Array<{ path: string; content: string }> {
 	const files: Array<{ path: string; content: string }> = [];
 
 	function walk(currentDir: string, relativePrefix: string = "") {

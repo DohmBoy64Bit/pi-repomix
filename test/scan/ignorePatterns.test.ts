@@ -2,12 +2,15 @@
  * Tests for ignore patterns.
  */
 
-import { describe, it, expect } from "vitest";
-import { shouldIgnore, getDefaultIgnorePatterns, loadGitignorePatterns } from "../../scan/ignorePatterns.js";
-import { writeFileSync, mkdirSync, rmSync } from "node:fs";
-import { join } from "node:path";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { mkdtempSync } from "node:fs";
+import { join } from "node:path";
+import { describe, expect, it } from "vitest";
+import {
+	getDefaultIgnorePatterns,
+	loadGitignorePatterns,
+	shouldIgnore,
+} from "../../scan/ignorePatterns.js";
 
 describe("scan/ignorePatterns", () => {
 	describe("getDefaultIgnorePatterns", () => {
@@ -47,7 +50,9 @@ describe("scan/ignorePatterns", () => {
 
 	describe("shouldIgnore", () => {
 		it("should return true for node_modules", () => {
-			expect(shouldIgnore("node_modules/package/index.js", ["**/node_modules/**"])).toBe(true);
+			expect(
+				shouldIgnore("node_modules/package/index.js", ["**/node_modules/**"]),
+			).toBe(true);
 		});
 
 		it("should return true for .git directory", () => {
@@ -126,7 +131,9 @@ describe("scan/ignorePatterns", () => {
 		});
 
 		it("should handle patterns with multiple wildcards", () => {
-			expect(shouldIgnore("src/utils/helpers.ts", ["**/utils/**/*.ts"])).toBe(true);
+			expect(shouldIgnore("src/utils/helpers.ts", ["**/utils/**/*.ts"])).toBe(
+				true,
+			);
 			expect(shouldIgnore("src/app.ts", ["**/utils/**/*.ts"])).toBe(false);
 		});
 
@@ -164,13 +171,16 @@ describe("scan/ignorePatterns", () => {
 			const tempDir = mkdtempSync(join(tmpdir(), "repomix-test-"));
 			try {
 				const gitignorePath = join(tempDir, ".gitignore");
-				writeFileSync(gitignorePath, `# Comment
+				writeFileSync(
+					gitignorePath,
+					`# Comment
 node_modules/
 dist/
 *.log
 
 .env
-`);
+`,
+				);
 
 				const patterns = loadGitignorePatterns(tempDir);
 
@@ -187,9 +197,12 @@ dist/
 			const tempDir = mkdtempSync(join(tmpdir(), "repomix-test-"));
 			try {
 				const gitignorePath = join(tempDir, ".gitignore");
-				writeFileSync(gitignorePath, `# This is a comment
+				writeFileSync(
+					gitignorePath,
+					`# This is a comment
 # Another comment
-src/`);
+src/`,
+				);
 
 				const patterns = loadGitignorePatterns(tempDir);
 
@@ -205,13 +218,16 @@ src/`);
 			const tempDir = mkdtempSync(join(tmpdir(), "repomix-test-"));
 			try {
 				const gitignorePath = join(tempDir, ".gitignore");
-				writeFileSync(gitignorePath, `
+				writeFileSync(
+					gitignorePath,
+					`
 
 src/
 
 test/
 
-`);
+`,
+				);
 
 				const patterns = loadGitignorePatterns(tempDir);
 
@@ -227,7 +243,9 @@ test/
 			const tempDir = mkdtempSync(join(tmpdir(), "repomix-test-"));
 			try {
 				const gitignorePath = join(tempDir, ".gitignore");
-				writeFileSync(gitignorePath, `# Build artifacts
+				writeFileSync(
+					gitignorePath,
+					`# Build artifacts
 dist/
 build/
 
@@ -249,7 +267,8 @@ logs/
 # OS
 .DS_Store
 Thumbs.db
-`);
+`,
+				);
 
 				const patterns = loadGitignorePatterns(tempDir);
 
@@ -271,8 +290,11 @@ Thumbs.db
 				mkdirSync(srcDir, { recursive: true });
 
 				const gitignorePath = join(srcDir, ".gitignore");
-				writeFileSync(gitignorePath, `*.tsbuildinfo
-`);
+				writeFileSync(
+					gitignorePath,
+					`*.tsbuildinfo
+`,
+				);
 
 				const patterns = loadGitignorePatterns(tempDir);
 
@@ -317,7 +339,9 @@ Thumbs.db
 			];
 
 			// Should ignore
-			expect(shouldIgnore("node_modules/package/index.js", patterns)).toBe(true);
+			expect(shouldIgnore("node_modules/package/index.js", patterns)).toBe(
+				true,
+			);
 			expect(shouldIgnore("dist/bundle.js", patterns)).toBe(true);
 			expect(shouldIgnore("app.log", patterns)).toBe(true);
 			expect(shouldIgnore(".env", patterns)).toBe(true);

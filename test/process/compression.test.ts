@@ -2,7 +2,7 @@
  * Tests for code compression.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { compressContent } from "../../process/compression.js";
 
 describe("process/compression", () => {
@@ -493,7 +493,7 @@ void print_hello(const char *name) {
 		describe("Swift compression", () => {
 			it("should compress Swift function declarations", () => {
 				const input = `func greet(name: String) -> String {
-	return "Hello, \(name)!"
+	return "Hello, (name)!"
 }
 
 func add(_ a: Int, _ b: Int) -> Int {
@@ -636,7 +636,11 @@ add() {
 	method9(): void { console.log('i'); }
 	method10(): void { console.log('j'); }
 }`;
-				const result = compressContent(largeFile, "LargeService.ts", "typescript");
+				const result = compressContent(
+					largeFile,
+					"LargeService.ts",
+					"typescript",
+				);
 				const ratio = result.length / largeFile.length;
 				expect(ratio).toBeLessThan(1.0);
 			});

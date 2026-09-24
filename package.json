@@ -1,61 +1,65 @@
 {
-  "name": "@dohmboy64bit/pi-repomix",
-  "version": "1.2.0",
-  "description": "Pack repository contents into a single AI-friendly file. Supports compression, security scanning, git integration, and multiple output formats.",
-  "keywords": [
-    "pi-package",
-    "repomix",
-    "repository-packing",
-    "ai",
-    "llm",
-    "code-analysis"
-  ],
-  "type": "module",
-  "homepage": "https://github.com/DohmBoy64Bit/pi-repomix",
-  "bugs": {
-    "url": "https://github.com/DohmBoy64Bit/pi-repomix/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/DohmBoy64Bit/pi-repomix.git"
-  },
-  "license": "MIT",
-  "author": "DohmBoy64Bit",
-  "pi": {
-    "extensions": [
-      "./index.ts"
-    ]
-  },
-  "peerDependencies": {
-    "@earendil-works/pi-coding-agent": "*"
-  },
-  "dependencies": {
-    "@repomix/strip-comments": "^2.4.2",
-    "@sinclair/typebox": "^0.34.49",
-    "gpt-tokenizer": "^4.0.0",
-    "isbinaryfile": "^5.0.2",
-    "json5": "^2.2.3",
-    "minimatch": "^10.2.6"
-  },
-  "scripts": {
-    "build": "tsc",
-    "test": "vitest run",
-    "prepublishOnly": "npm run build"
-  },
-  "devDependencies": {
-    "@types/node": "^24.13.6",
-    "typescript": "^7.0.0",
-    "vitest": "^5.0.1"
-  },
-  "files": [
-    "dist",
-    "docs",
-    "README.md"
-  ],
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    }
-  }
+	"name": "@dohmboy64bit/pi-repomix",
+	"version": "1.2.0",
+	"description": "Pack repository contents into a single AI-friendly file. Supports compression, security scanning, git integration, and multiple output formats.",
+	"keywords": [
+		"pi-package",
+		"repomix",
+		"repository-packing",
+		"ai",
+		"llm",
+		"code-analysis"
+	],
+	"type": "module",
+	"homepage": "https://github.com/DohmBoy64Bit/pi-repomix",
+	"bugs": {
+		"url": "https://github.com/DohmBoy64Bit/pi-repomix/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/DohmBoy64Bit/pi-repomix.git"
+	},
+	"license": "MIT",
+	"author": "DohmBoy64Bit",
+	"pi": {
+		"extensions": [
+			"./index.ts"
+		]
+	},
+	"peerDependencies": {
+		"@earendil-works/pi-coding-agent": "*"
+	},
+	"dependencies": {
+		"@repomix/strip-comments": "^2.4.2",
+		"@sinclair/typebox": "^0.34.49",
+		"gpt-tokenizer": "^4.0.0",
+		"isbinaryfile": "^5.0.2",
+		"json5": "^2.2.3",
+		"minimatch": "^10.2.6"
+	},
+	"scripts": {
+		"build": "tsc",
+		"test": "vitest run",
+		"lint": "biome check .",
+		"lint:fix": "biome check --fix .",
+		"format": "biome format --write .",
+		"prepublishOnly": "npm run build"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.5.14",
+		"@types/node": "^24.13.6",
+		"typescript": "^7.0.0",
+		"vitest": "^5.0.1"
+	},
+	"files": [
+		"dist",
+		"docs",
+		"README.md"
+	],
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		}
+	}
 }

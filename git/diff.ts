@@ -23,7 +23,7 @@ export function parseGitDiffOutput(diff: string): ParsedGitDiff[] {
 	let headerMatch;
 
 	while ((headerMatch = diffHeaderRegex.exec(diff)) !== null) {
-		const file = headerMatch[1] ?? headerMatch[2] ?? '';
+		const file = headerMatch[1] ?? headerMatch[2] ?? "";
 		const startPos = headerMatch.index;
 
 		// Find the next diff header or end of string (use a fresh regex to avoid state issues)
@@ -47,9 +47,12 @@ export function parseGitDiffOutput(diff: string): ParsedGitDiff[] {
 		const hunkRegex = /^@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@/gm;
 		let hunkMatch;
 		while ((hunkMatch = hunkRegex.exec(block)) !== null) {
-			const start = parseInt(hunkMatch[1] ?? '0', 10);
+			const start = parseInt(hunkMatch[1] ?? "0", 10);
 			const afterHunk = block.substring(hunkMatch.index + hunkMatch[0].length);
-			const lines = afterHunk.split('\n').slice(0, 10).map((l: string) => l);
+			const lines = afterHunk
+				.split("\n")
+				.slice(0, 10)
+				.map((l: string) => l);
 			hunks.push({ start, lines });
 		}
 
@@ -61,30 +64,30 @@ export function parseGitDiffOutput(diff: string): ParsedGitDiff[] {
 
 export function parseGitDiffStatOutput(stat: string): ParsedGitDiff[] {
 	if (!stat.trim()) return [];
-	
+
 	const results: ParsedGitDiff[] = [];
-	const lines = stat.trim().split('\n');
-	
+	const lines = stat.trim().split("\n");
+
 	for (const line of lines) {
 		if (!line.trim()) continue;
-		
+
 		let file = line.trim();
-		
+
 		// Handle rename: old.ts => new.ts
 		const renameMatch = file.match(/^(.+) => (.+) \|/);
 		if (renameMatch) {
 			file = renameMatch[2] ?? file;
 		} else {
 			// Extract file from " file.ts | ..."
-			const pipeIdx = file.indexOf('|');
+			const pipeIdx = file.indexOf("|");
 			if (pipeIdx > 0) {
 				file = file.substring(0, pipeIdx).trim();
 			}
 		}
-		
+
 		results.push({ file, hunks: [] });
 	}
-	
+
 	return results;
 }
 
@@ -105,15 +108,27 @@ export interface GitDiffResult {
 /**
  * Get git diff for the repository.
  */
-export async function getGitDiff(gitRoot: string, options: GitDiffOptions = {}): Promise<GitDiffResult> {
+export async function getGitDiff(
+	gitRoot: string,
+	options: GitDiffOptions = {},
+): Promise<GitDiffResult> {
 	const result: GitDiffResult = {};
 
 	if (options.workTree !== false) {
-		result.workTree = await execGit(gitRoot, ["diff", "--no-color", "--no-ext-diff"]);
+		result.workTree = await execGit(gitRoot, [
+			"diff",
+			"--no-color",
+			"--no-ext-diff",
+		]);
 	}
 
 	if (options.staged) {
-		result.staged = await execGit(gitRoot, ["diff", "--cached", "--no-color", "--no-ext-diff"]);
+		result.staged = await execGit(gitRoot, [
+			"diff",
+			"--cached",
+			"--no-color",
+			"--no-ext-diff",
+		]);
 	}
 
 	return result;
@@ -122,7 +137,10 @@ export async function getGitDiff(gitRoot: string, options: GitDiffOptions = {}):
 /**
  * Get git diff for a specific file.
  */
-export async function getFileDiff(gitRoot: string, filePath: string): Promise<string> {
+export async function getFileDiff(
+	gitRoot: string,
+	filePath: string,
+): Promise<string> {
 	return await execGit(gitRoot, ["diff", "HEAD", "--", filePath]);
 }
 

@@ -2,8 +2,11 @@
  * Tests for file tree generation.
  */
 
-import { describe, it, expect } from "vitest";
-import { generateFileTree, generateFlatDirectory } from "../../scan/fileTree.js";
+import { describe, expect, it } from "vitest";
+import {
+	generateFileTree,
+	generateFlatDirectory,
+} from "../../scan/fileTree.js";
 
 describe("scan/fileTree", () => {
 	describe("generateFileTree", () => {
@@ -17,7 +20,11 @@ describe("scan/fileTree", () => {
 		});
 
 		it("should generate a tree for a nested structure", () => {
-			const filePaths = ["src/app.ts", "src/utils/helper.ts", "test/app.test.ts"];
+			const filePaths = [
+				"src/app.ts",
+				"src/utils/helper.ts",
+				"test/app.test.ts",
+			];
 			const result = generateFileTree(filePaths);
 
 			expect(result).toContain("src");
@@ -172,7 +179,18 @@ describe("scan/fileTree", () => {
 			];
 			const result = generateFileTree(filePaths);
 
-			for (const ext of [".ts", ".js", ".py", ".go", ".rs", ".java", ".php", ".swift", ".kt", ".rb"]) {
+			for (const ext of [
+				".ts",
+				".js",
+				".py",
+				".go",
+				".rs",
+				".java",
+				".php",
+				".swift",
+				".kt",
+				".rb",
+			]) {
 				expect(result).toContain(ext);
 			}
 		});
@@ -180,7 +198,11 @@ describe("scan/fileTree", () => {
 
 	describe("generateFlatDirectory", () => {
 		it("should generate a flat directory listing", () => {
-			const filePaths = ["src/app.ts", "src/utils/helper.ts", "test/app.test.ts"];
+			const filePaths = [
+				"src/app.ts",
+				"src/utils/helper.ts",
+				"test/app.test.ts",
+			];
 			const result = generateFlatDirectory(filePaths);
 
 			expect(result).toContain("src/");

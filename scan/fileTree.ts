@@ -62,14 +62,21 @@ export function generateFileTree(
 /**
  * Recursively render a tree node.
  */
-function renderNode(node: TreeNode, prefix: string, isLast: boolean, lines: string[]): void {
+function renderNode(
+	node: TreeNode,
+	prefix: string,
+	isLast: boolean,
+	lines: string[],
+): void {
 	if (node.name) {
 		const connector = isLast ? "└── " : "├── ";
 		const icon = node.isDirectory ? "📁 " : "📄 ";
 		lines.push(`${prefix}${connector}${icon}${node.name}`);
 	}
 
-	const remaining = node.children.filter((c) => !(node.name === "" && !isLast));
+	const remaining = node.children.filter(
+		(_c) => !(node.name === "" && !isLast),
+	);
 	const sortedChildren = remaining.sort((a, b) => {
 		// Directories first, then files
 		if (a.isDirectory !== b.isDirectory) {

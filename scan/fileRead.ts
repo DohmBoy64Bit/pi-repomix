@@ -9,25 +9,87 @@ import type { RawFile } from "./types.js";
 
 // Common text extensions for fallback detection
 const TEXT_EXTENSIONS = new Set([
-	".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs",
-	".py", ".rb", ".go", ".rs", ".java", ".c", ".cpp", ".h", ".hpp",
-	".swift", ".kt", ".kts",
-	".php", ".scala", ".clj", ".hs", ".ex", ".exs", ".erl", ".elm",
-	".sh", ".bash", ".zsh", ".fish", ".ps1", ".bat", ".cmd",
-	".sql", ".graphql", ".gql",
-	".html", ".htm", ".xml", ".svg", ".xhtml",
-	".css", ".scss", ".sass", ".less", ".styl",
-	".json", ".jsonc", ".json5", ".yaml", ".yml", ".toml", ".ini", ".cfg", ".conf",
-	".md", ".mdx", ".rst", ".txt", ".text", ".log", ".csv",
-	".vue", ".svelte", ".astro",
-	".toml", ".env", ".dockerfile",
-	".lua", ".r", ".R", ".jl",
+	".ts",
+	".tsx",
+	".js",
+	".jsx",
+	".mjs",
+	".cjs",
+	".py",
+	".rb",
+	".go",
+	".rs",
+	".java",
+	".c",
+	".cpp",
+	".h",
+	".hpp",
+	".swift",
+	".kt",
+	".kts",
+	".php",
+	".scala",
+	".clj",
+	".hs",
+	".ex",
+	".exs",
+	".erl",
+	".elm",
+	".sh",
+	".bash",
+	".zsh",
+	".fish",
+	".ps1",
+	".bat",
+	".cmd",
+	".sql",
+	".graphql",
+	".gql",
+	".html",
+	".htm",
+	".xml",
+	".svg",
+	".xhtml",
+	".css",
+	".scss",
+	".sass",
+	".less",
+	".styl",
+	".json",
+	".jsonc",
+	".json5",
+	".yaml",
+	".yml",
+	".toml",
+	".ini",
+	".cfg",
+	".conf",
+	".md",
+	".mdx",
+	".rst",
+	".txt",
+	".text",
+	".log",
+	".csv",
+	".vue",
+	".svelte",
+	".astro",
+	".toml",
+	".env",
+	".dockerfile",
+	".lua",
+	".r",
+	".R",
+	".jl",
 ]);
 
 /**
  * Read a file safely, detecting if it's binary.
  */
-export async function readFileSafe(absolutePath: string, relativePath: string): Promise<RawFile | null> {
+export async function readFileSafe(
+	absolutePath: string,
+	relativePath: string,
+): Promise<RawFile | null> {
 	try {
 		const buffer = await fs.promises.readFile(absolutePath);
 
@@ -90,13 +152,18 @@ export async function readFilesInParallel(
 		while (index < filePaths.length) {
 			const currentIndex = index++;
 			const filePath = filePaths[currentIndex] ?? "";
-			const absolutePath = path.isAbsolute(filePath) ? filePath : path.join(rootDir, filePath);
+			const absolutePath = path.isAbsolute(filePath)
+				? filePath
+				: path.join(rootDir, filePath);
 			results[currentIndex] = await readFileSafe(absolutePath, filePath);
 		}
 	}
 
 	// Create worker pool
-	const workers = Array.from({ length: Math.min(concurrency, filePaths.length) }, () => worker());
+	const workers = Array.from(
+		{ length: Math.min(concurrency, filePaths.length) },
+		() => worker(),
+	);
 	await Promise.all(workers);
 
 	// Filter out nulls

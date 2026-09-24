@@ -1,12 +1,12 @@
-import { defineConfig } from "vitest/config";
-import path from "node:path";
 import fs from "node:fs";
+import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { defineConfig } from "vitest/config";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Vite plugin to resolve .js imports to .ts files
-function resolveJsToTs() {
+function _resolveJsToTs() {
 	return {
 		name: "resolve-js-to-ts",
 		enforce: "pre",
@@ -16,13 +16,19 @@ function resolveJsToTs() {
 			}
 
 			const importerDir = path.dirname(importer);
-			const resolved = path.resolve(importerDir, source.replace(/\.js$/, ".ts"));
+			const resolved = path.resolve(
+				importerDir,
+				source.replace(/\.js$/, ".ts"),
+			);
 
 			if (fs.existsSync(resolved)) {
 				return resolved;
 			}
 
-			const dtsResolved = path.resolve(importerDir, source.replace(/\.js$/, ".d.ts"));
+			const dtsResolved = path.resolve(
+				importerDir,
+				source.replace(/\.js$/, ".d.ts"),
+			);
 			if (fs.existsSync(dtsResolved)) {
 				return dtsResolved;
 			}
@@ -44,13 +50,19 @@ export default defineConfig({
 				}
 
 				const importerDir = path.dirname(importer);
-				const resolved = path.resolve(importerDir, source.replace(/\.js$/, ".ts"));
+				const resolved = path.resolve(
+					importerDir,
+					source.replace(/\.js$/, ".ts"),
+				);
 
 				if (fs.existsSync(resolved)) {
 					return resolved;
 				}
 
-				const dtsResolved = path.resolve(importerDir, source.replace(/\.js$/, ".d.ts"));
+				const dtsResolved = path.resolve(
+					importerDir,
+					source.replace(/\.js$/, ".d.ts"),
+				);
 				if (fs.existsSync(dtsResolved)) {
 					return dtsResolved;
 				}

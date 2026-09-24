@@ -2,16 +2,16 @@
  * Tests for configuration defaults.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
 	DEFAULT_IGNORE_PATTERNS,
+	DEFAULT_INCLUDE_LOGS_COUNT,
+	DEFAULT_MAX_FILE_SIZE,
 	DEFAULT_OUTPUT_FILE,
 	DEFAULT_OUTPUT_STYLE,
-	DEFAULT_TOKEN_ENCODING,
-	DEFAULT_MAX_FILE_SIZE,
-	DEFAULT_TOP_FILES_LENGTH,
-	DEFAULT_INCLUDE_LOGS_COUNT,
 	DEFAULT_SORT_BY_CHANGES_MAX_COMMITS,
+	DEFAULT_TOKEN_ENCODING,
+	DEFAULT_TOP_FILES_LENGTH,
 	DEFAULTS,
 } from "../../config/defaults.js";
 
@@ -77,7 +77,9 @@ describe("config/defaults", () => {
 			expect(DEFAULTS.maxFileSize).toBe(DEFAULT_MAX_FILE_SIZE);
 			expect(DEFAULTS.topFilesLength).toBe(DEFAULT_TOP_FILES_LENGTH);
 			expect(DEFAULTS.includeLogsCount).toBe(DEFAULT_INCLUDE_LOGS_COUNT);
-			expect(DEFAULTS.sortByChangesMaxCommits).toBe(DEFAULT_SORT_BY_CHANGES_MAX_COMMITS);
+			expect(DEFAULTS.sortByChangesMaxCommits).toBe(
+				DEFAULT_SORT_BY_CHANGES_MAX_COMMITS,
+			);
 			expect(DEFAULTS.ignorePatterns).toBe(DEFAULT_IGNORE_PATTERNS);
 		});
 

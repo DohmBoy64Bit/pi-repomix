@@ -12,7 +12,11 @@ interface CompressedSegment {
 /**
  * Compress file content by extracting signatures and structure.
  */
-export function compressContent(content: string, filePath: string, language: string): string {
+export function compressContent(
+	content: string,
+	_filePath: string,
+	language: string,
+): string {
 	const manipulator = getLanguageManipulator(language);
 	if (!manipulator) {
 		return content; // Unknown language, return as-is
@@ -76,7 +80,11 @@ function compressTypeScript(content: string): string {
 		}
 
 		// Skip pure comments
-		if (trimmed.startsWith("//") || trimmed.startsWith("*") || trimmed.startsWith("/*")) {
+		if (
+			trimmed.startsWith("//") ||
+			trimmed.startsWith("*") ||
+			trimmed.startsWith("/*")
+		) {
 			continue;
 		}
 
@@ -101,7 +109,11 @@ function compressTypeScript(content: string): string {
 			}
 			continue;
 		}
-		if (trimmed.startsWith('"') || trimmed.startsWith("'") || trimmed.startsWith("`")) {
+		if (
+			trimmed.startsWith('"') ||
+			trimmed.startsWith("'") ||
+			trimmed.startsWith("`")
+		) {
 			inString = true;
 			stringChar = trimmed[0] ?? "";
 		}
@@ -123,14 +135,18 @@ function compressTypeScript(content: string): string {
 		}
 
 		// Extract function declarations
-		const functionMatch = trimmed.match(/^(export\s+)?(default\s+)?(async\s+)?function\s+(\w+)\s*\(([^)]*)\)/);
+		const functionMatch = trimmed.match(
+			/^(export\s+)?(default\s+)?(async\s+)?function\s+(\w+)\s*\(([^)]*)\)/,
+		);
 		if (functionMatch) {
 			const exportMod = functionMatch[1] ?? "";
 			const defaultMod = functionMatch[2] ?? "";
 			const asyncMod = functionMatch[3] ?? "";
 			const name = functionMatch[4];
 			const params = functionMatch[5];
-			output.push(`${exportMod}${defaultMod}${asyncMod}function ${name}(${params}) {`);
+			output.push(
+				`${exportMod}${defaultMod}${asyncMod}function ${name}(${params}) {`,
+			);
 			output.push("  // ... implementation");
 			output.push("}");
 			output.push("");
@@ -139,15 +155,21 @@ function compressTypeScript(content: string): string {
 		}
 
 		// Extract class declarations (including export default class)
-		const classMatch = trimmed.match(/^(export\s+)?(default\s+)?(abstract\s+)?class\s+(\w+)(?:\s+extends\s+(\w+))?(?:\s+implements\s+([^ ]+))?\s*\{?/);
+		const classMatch = trimmed.match(
+			/^(export\s+)?(default\s+)?(abstract\s+)?class\s+(\w+)(?:\s+extends\s+(\w+))?(?:\s+implements\s+([^ ]+))?\s*\{?/,
+		);
 		if (classMatch) {
 			const exportMod = classMatch[1] ?? "";
 			const defaultMod = classMatch[2] ?? "";
 			const abstractMod = classMatch[3] ?? "";
 			const name = classMatch[4];
 			const extendsClause = classMatch[5] ? ` extends ${classMatch[5]}` : "";
-			const implementsClause = classMatch[6] ? ` implements ${classMatch[6]}` : "";
-			output.push(`${exportMod}${defaultMod}${abstractMod}class ${name}${extendsClause}${implementsClause} {`);
+			const implementsClause = classMatch[6]
+				? ` implements ${classMatch[6]}`
+				: "";
+			output.push(
+				`${exportMod}${defaultMod}${abstractMod}class ${name}${extendsClause}${implementsClause} {`,
+			);
 			output.push("  // ... class body");
 			output.push("}");
 			output.push("");
@@ -156,7 +178,9 @@ function compressTypeScript(content: string): string {
 		}
 
 		// Extract interface declarations
-		const interfaceMatch = trimmed.match(/^(export\s+)?interface\s+(\w+)\s*\{?/);
+		const interfaceMatch = trimmed.match(
+			/^(export\s+)?interface\s+(\w+)\s*\{?/,
+		);
 		if (interfaceMatch) {
 			const exportMod = interfaceMatch[1] ?? "";
 			const name = interfaceMatch[2];
@@ -191,7 +215,9 @@ function compressTypeScript(content: string): string {
 		}
 
 		// Extract const/let/var with type annotations (top-level)
-		const variableMatch = trimmed.match(/^(export\s+)?(const|let|var)\s+(\w+)\s*:\s*/);
+		const variableMatch = trimmed.match(
+			/^(export\s+)?(const|let|var)\s+(\w+)\s*:\s*/,
+		);
 		if (variableMatch && line === trimmed && !line.startsWith("  ")) {
 			const exportMod = variableMatch[1] ?? "";
 			const keyword = variableMatch[2];
@@ -232,7 +258,7 @@ function compressPython(content: string): string {
 
 		// Calculate indent level
 		const match = line.match(/^(\s*)/);
-		const spaces = match && match[1] ? match[1].length : 0;
+		const spaces = match?.[1] ? match[1].length : 0;
 		const currentLevel = spaces / 4;
 
 		// Decrease indent level for dedented lines
@@ -247,7 +273,9 @@ function compressPython(content: string): string {
 		}
 
 		// Function definitions
-		const funcMatch = trimmed.match(/^(def|async def)\s+(\w+)\s*\(([^)]*)\)\s*:(.*)/);
+		const funcMatch = trimmed.match(
+			/^(def|async def)\s+(\w+)\s*\(([^)]*)\)\s*:(.*)/,
+		);
 		if (funcMatch) {
 			output.push(`${funcMatch[1]} ${funcMatch[2]}(${funcMatch[3]}):`);
 			output.push("    # ... implementation");
@@ -328,7 +356,10 @@ function compressRuby(content: string): string {
 			continue;
 		}
 
-		if (trimmed.startsWith("require") || trimmed.startsWith("require_relative")) {
+		if (
+			trimmed.startsWith("require") ||
+			trimmed.startsWith("require_relative")
+		) {
 			output.push(line);
 			continue;
 		}
@@ -361,7 +392,9 @@ function compressGo(content: string): string {
 			continue;
 		}
 
-		const funcMatch = trimmed.match(/^(func)\s+(\([^)]*\)\s+)?(\w+)\s*\(([^)]*)\)(.*)/);
+		const funcMatch = trimmed.match(
+			/^(func)\s+(\([^)]*\)\s+)?(\w+)\s*\(([^)]*)\)(.*)/,
+		);
 		if (funcMatch) {
 			const recv = funcMatch[2] ?? "";
 			const name = funcMatch[3];
@@ -407,7 +440,8 @@ function compressRust(content: string): string {
 	for (const line of lines) {
 		const trimmed = line.trim();
 
-		if (!trimmed || trimmed.startsWith("//") || trimmed.startsWith("/*")) continue;
+		if (!trimmed || trimmed.startsWith("//") || trimmed.startsWith("/*"))
+			continue;
 
 		// Skip lines inside function/impl/struct bodies
 		if (braceDepth > 0) {
@@ -482,7 +516,8 @@ function compressCStyleLanguage(content: string): string {
 	for (const line of lines) {
 		const trimmed = line.trim();
 
-		if (!trimmed || trimmed.startsWith("//") || trimmed.startsWith("/*")) continue;
+		if (!trimmed || trimmed.startsWith("//") || trimmed.startsWith("/*"))
+			continue;
 
 		// Skip lines inside function/class/interface bodies
 		if (braceDepth > 0) {
@@ -499,8 +534,15 @@ function compressCStyleLanguage(content: string): string {
 			continue;
 		}
 
-		const funcMatch = trimmed.match(/^(public|private|protected|static|\s+)*\s*(\w+)\s+(\w+)\s*\(([^)]*)\)/);
-		if (funcMatch && !trimmed.startsWith("if") && !trimmed.startsWith("while") && !trimmed.startsWith("for")) {
+		const funcMatch = trimmed.match(
+			/^(public|private|protected|static|\s+)*\s*(\w+)\s+(\w+)\s*\(([^)]*)\)/,
+		);
+		if (
+			funcMatch &&
+			!trimmed.startsWith("if") &&
+			!trimmed.startsWith("while") &&
+			!trimmed.startsWith("for")
+		) {
 			output.push(`${funcMatch[0]}`);
 			output.push("    // ... implementation");
 			output.push("}");
@@ -508,7 +550,9 @@ function compressCStyleLanguage(content: string): string {
 			continue;
 		}
 
-		const classMatch = trimmed.match(/^(public|private|protected|abstract|\s+)*\s*class\s+(\w+)/);
+		const classMatch = trimmed.match(
+			/^(public|private|protected|abstract|\s+)*\s*class\s+(\w+)/,
+		);
 		if (classMatch) {
 			output.push(`${classMatch[0]}`);
 			output.push("    // ... class body");
@@ -517,7 +561,9 @@ function compressCStyleLanguage(content: string): string {
 			continue;
 		}
 
-		const interfaceMatch = trimmed.match(/^(public|abstract|\s+)*\s*interface\s+(\w+)/);
+		const interfaceMatch = trimmed.match(
+			/^(public|abstract|\s+)*\s*interface\s+(\w+)/,
+		);
 		if (interfaceMatch) {
 			output.push(`${interfaceMatch[0]}`);
 			output.push("    // ... interface body");
@@ -543,7 +589,8 @@ function compressPHP(content: string): string {
 	for (const line of lines) {
 		const trimmed = line.trim();
 
-		if (!trimmed || trimmed.startsWith("//") || trimmed.startsWith("/*")) continue;
+		if (!trimmed || trimmed.startsWith("//") || trimmed.startsWith("/*"))
+			continue;
 
 		// Skip lines inside function/class bodies
 		if (braceDepth > 0) {
@@ -554,7 +601,9 @@ function compressPHP(content: string): string {
 			continue;
 		}
 
-		const funcMatch = trimmed.match(/^(public|private|protected\s+)?(static\s+)?function\s+(\w+)\s*\(([^)]*)\)/);
+		const funcMatch = trimmed.match(
+			/^(public|private|protected\s+)?(static\s+)?function\s+(\w+)\s*\(([^)]*)\)/,
+		);
 		if (funcMatch) {
 			const visibility = funcMatch[1] ?? "";
 			const staticMod = funcMatch[2] ?? "";
@@ -567,7 +616,9 @@ function compressPHP(content: string): string {
 			continue;
 		}
 
-		const classMatch = trimmed.match(/^(public|private|protected|\s+)*\s*class\s+(\w+)/);
+		const classMatch = trimmed.match(
+			/^(public|private|protected|\s+)*\s*class\s+(\w+)/,
+		);
 		if (classMatch) {
 			output.push(`${classMatch[0]}`);
 			output.push("    // ... class body");
@@ -576,7 +627,11 @@ function compressPHP(content: string): string {
 			continue;
 		}
 
-		if (trimmed.startsWith("<?php") || trimmed.startsWith("namespace ") || trimmed.startsWith("use ")) {
+		if (
+			trimmed.startsWith("<?php") ||
+			trimmed.startsWith("namespace ") ||
+			trimmed.startsWith("use ")
+		) {
 			output.push(line);
 			continue;
 		}
@@ -598,7 +653,8 @@ function compressSwift(content: string): string {
 	for (const line of lines) {
 		const trimmed = line.trim();
 
-		if (!trimmed || trimmed.startsWith("//") || trimmed.startsWith("/*")) continue;
+		if (!trimmed || trimmed.startsWith("//") || trimmed.startsWith("/*"))
+			continue;
 
 		// Skip lines inside function/class bodies
 		if (braceDepth > 0) {
@@ -609,7 +665,9 @@ function compressSwift(content: string): string {
 			continue;
 		}
 
-		const funcMatch = trimmed.match(/^(public|private|internal|\s+)*\s*(static\s+)?(func)\s+(\w+)\s*\(([^)]*)\)/);
+		const funcMatch = trimmed.match(
+			/^(public|private|internal|\s+)*\s*(static\s+)?(func)\s+(\w+)\s*\(([^)]*)\)/,
+		);
 		if (funcMatch) {
 			const name = funcMatch[4];
 			const params = funcMatch[5];
@@ -620,7 +678,9 @@ function compressSwift(content: string): string {
 			continue;
 		}
 
-		const classMatch = trimmed.match(/^(public|private|\s+)*\s*(struct|class|enum)\s+(\w+)/);
+		const classMatch = trimmed.match(
+			/^(public|private|\s+)*\s*(struct|class|enum)\s+(\w+)/,
+		);
 		if (classMatch) {
 			const kind = classMatch[2];
 			const name = classMatch[3];
@@ -648,7 +708,8 @@ function compressKotlin(content: string): string {
 	for (const line of lines) {
 		const trimmed = line.trim();
 
-		if (!trimmed || trimmed.startsWith("//") || trimmed.startsWith("/*")) continue;
+		if (!trimmed || trimmed.startsWith("//") || trimmed.startsWith("/*"))
+			continue;
 
 		// Skip lines inside function/class bodies
 		if (braceDepth > 0) {
@@ -671,7 +732,9 @@ function compressKotlin(content: string): string {
 			continue;
 		}
 
-		const classMatch = trimmed.match(/^(class|data class|sealed class|interface|object)\s+(\w+)/);
+		const classMatch = trimmed.match(
+			/^(class|data class|sealed class|interface|object)\s+(\w+)/,
+		);
 		if (classMatch) {
 			output.push(`${classMatch[1]} ${classMatch[2]}`);
 			output.push("    // ... body");
@@ -696,7 +759,8 @@ function compressScala(content: string): string {
 	for (const line of lines) {
 		const trimmed = line.trim();
 
-		if (!trimmed || trimmed.startsWith("//") || trimmed.startsWith("/*")) continue;
+		if (!trimmed || trimmed.startsWith("//") || trimmed.startsWith("/*"))
+			continue;
 
 		const funcMatch = trimmed.match(/^(def)\s+(\w+)\s*\(([^)]*)\)(.*)/);
 		if (funcMatch) {
@@ -705,7 +769,9 @@ function compressScala(content: string): string {
 			continue;
 		}
 
-		const classMatch = trimmed.match(/^(class|trait|object|case class)\s+(\w+)/);
+		const classMatch = trimmed.match(
+			/^(class|trait|object|case class)\s+(\w+)/,
+		);
 		if (classMatch) {
 			output.push(`${classMatch[1]} ${classMatch[2]}`);
 			output.push("    // ... body");
@@ -728,7 +794,8 @@ function compressHaskell(content: string): string {
 	for (const line of lines) {
 		const trimmed = line.trim();
 
-		if (!trimmed || trimmed.startsWith("--") || trimmed.startsWith("{-")) continue;
+		if (!trimmed || trimmed.startsWith("--") || trimmed.startsWith("{-"))
+			continue;
 
 		const funcMatch = trimmed.match(/^(\w+)\s+::\s*(.*)/);
 		if (funcMatch) {
@@ -762,7 +829,9 @@ function compressElixir(content: string): string {
 
 		if (!trimmed || trimmed.startsWith("#")) continue;
 
-		const funcMatch = trimmed.match(/^(def|defp|defdelegate)\s+(\w+)\s*\(([^)]*)\)/);
+		const funcMatch = trimmed.match(
+			/^(def|defp|defdelegate)\s+(\w+)\s*\(([^)]*)\)/,
+		);
 		if (funcMatch) {
 			output.push(`def ${funcMatch[2]}(${funcMatch[3]}) do`);
 			output.push("  # ... implementation");
@@ -777,7 +846,11 @@ function compressElixir(content: string): string {
 			continue;
 		}
 
-		if (trimmed.startsWith("import ") || trimmed.startsWith("require ") || trimmed.startsWith("alias ")) {
+		if (
+			trimmed.startsWith("import ") ||
+			trimmed.startsWith("require ") ||
+			trimmed.startsWith("alias ")
+		) {
 			output.push(line);
 			continue;
 		}
@@ -798,7 +871,8 @@ function compressShell(content: string): string {
 	for (const line of lines) {
 		const trimmed = line.trim();
 
-		if (!trimmed || trimmed.startsWith("#") && !trimmed.startsWith("#!")) continue;
+		if (!trimmed || (trimmed.startsWith("#") && !trimmed.startsWith("#!")))
+			continue;
 
 		// Keep shebang
 		if (trimmed.startsWith("#!")) {
@@ -840,7 +914,9 @@ function compressSQL(content: string): string {
 
 		if (!trimmed || trimmed.startsWith("--")) continue;
 
-		const createMatch = trimmed.match(/^(CREATE\s+(?:TABLE|VIEW|PROCEDURE|FUNCTION)\s+\w+)/i);
+		const createMatch = trimmed.match(
+			/^(CREATE\s+(?:TABLE|VIEW|PROCEDURE|FUNCTION)\s+\w+)/i,
+		);
 		if (createMatch) {
 			output.push(`${createMatch[1]}`);
 			output.push("    -- ... definition");
@@ -858,7 +934,7 @@ function compressSQL(content: string): string {
  */
 function compressHTML(content: string): string {
 	// Remove HTML comments
-	let result = content.replace(/<!--[\s\S]*?-->/g, "");
+	const result = content.replace(/<!--[\s\S]*?-->/g, "");
 
 	// Remove empty lines and lines with only whitespace
 	const lines = result.split("\n");
@@ -878,13 +954,27 @@ function compressHTML(content: string): string {
 		// Preserve opening/closing tags structure
 		const tagMatch = trimmed.match(/<(\/?)(\w+)([^>]*)>/);
 		if (tagMatch) {
-			const [_, closing, tagName = '', attrs] = tagMatch;
+			const [_, closing, tagName = "", attrs] = tagMatch;
 			// Self-closing or void elements
-			const voidElements = new Set(["br", "hr", "img", "input", "meta", "link", "area", "base", "col", "embed", "source", "track", "wbr"]);
+			const voidElements = new Set([
+				"br",
+				"hr",
+				"img",
+				"input",
+				"meta",
+				"link",
+				"area",
+				"base",
+				"col",
+				"embed",
+				"source",
+				"track",
+				"wbr",
+			]);
 			if (closing || voidElements.has(tagName.toLowerCase())) {
-				output.push(`<${closing}${tagName}${attrs ? " " + attrs.trim() : ""}>`);
+				output.push(`<${closing}${tagName}${attrs ? ` ${attrs.trim()}` : ""}>`);
 			} else {
-				output.push(`<${closing}${tagName}${attrs ? " " + attrs.trim() : ""}>`);
+				output.push(`<${closing}${tagName}${attrs ? ` ${attrs.trim()}` : ""}>`);
 				// Add placeholder for content
 				if (!trimmed.endsWith(`</${tagName}>`)) {
 					output.push("    <!-- content -->");
@@ -906,7 +996,7 @@ function compressHTML(content: string): string {
  */
 function compressCSS(content: string): string {
 	// Remove CSS comments
-	let result = content.replace(/\/\*[\s\S]*?\*\//g, "");
+	const result = content.replace(/\/\*[\s\S]*?\*\//g, "");
 
 	// Remove empty lines
 	const lines = result.split("\n");
@@ -919,9 +1009,5 @@ function compressCSS(content: string): string {
 	}
 
 	// Collapse multiple spaces
-	return output
-		.map((line) => line.replace(/\s+/g, " ").trim())
-		.join("\n");
+	return output.map((line) => line.replace(/\s+/g, " ").trim()).join("\n");
 }
-
-

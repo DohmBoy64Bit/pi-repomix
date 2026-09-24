@@ -20,15 +20,31 @@ export function removeComments(content: string, language: string): string {
 /**
  * Try using the strip-comments library.
  */
-function tryStripComments(content: string, language: string): string | null {
+function tryStripComments(_content: string, language: string): string | null {
 	try {
-		const mod = require("@repomix/strip-comments");
+		const _mod = require("@repomix/strip-comments");
 
 		// Map language to strip-comments approach
-		const cStyleLangs = new Set([
-			"typescript", "tsx", "javascript", "jsx", "java", "c", "cpp",
-			"go", "rust", "php", "swift", "kotlin", "scala", "csharp",
-			"css", "scss", "sass", "less", "stylus",
+		const _cStyleLangs = new Set([
+			"typescript",
+			"tsx",
+			"javascript",
+			"jsx",
+			"java",
+			"c",
+			"cpp",
+			"go",
+			"rust",
+			"php",
+			"swift",
+			"kotlin",
+			"scala",
+			"csharp",
+			"css",
+			"scss",
+			"sass",
+			"less",
+			"stylus",
 		]);
 
 		// Note: strip-comments library doesn't handle nested block comments,
@@ -113,7 +129,11 @@ function removeCStyleComments(content: string): string {
 					i++;
 				}
 			} else {
-				while (i < content.length && content[i] !== quote && content[i] !== "\n") {
+				while (
+					i < content.length &&
+					content[i] !== quote &&
+					content[i] !== "\n"
+				) {
 					if (content[i] === "\\" && i + 1 < content.length) {
 						result.push(content[i]!, content[i + 1]!);
 						i += 2;

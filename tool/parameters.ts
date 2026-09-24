@@ -8,13 +8,15 @@ export const RepomixToolParameters = Type.Object({
 	// Core options
 	directory: Type.Optional(
 		Type.String({
-			description: "Directory to pack. Defaults to the current working directory.",
+			description:
+				"Directory to pack. Defaults to the current working directory.",
 		}),
 	),
 
 	output: Type.Optional(
 		Type.String({
-			description: "Output file path. Default varies by style (repomix-output.txt/xml/json/markdown).",
+			description:
+				"Output file path. Default varies by style (repomix-output.txt/xml/json/markdown).",
 		}),
 	),
 
@@ -35,20 +37,23 @@ export const RepomixToolParameters = Type.Object({
 	// File selection
 	include: Type.Optional(
 		Type.Array(Type.String(), {
-			description: "Glob patterns for files to include. Use an array of patterns. Empty array includes all files.",
+			description:
+				"Glob patterns for files to include. Use an array of patterns. Empty array includes all files.",
 		}),
 	),
 
 	ignore: Type.Optional(
 		Type.Array(Type.String(), {
-			description: "Additional glob patterns to exclude. Use an array of patterns.",
+			description:
+				"Additional glob patterns to exclude. Use an array of patterns.",
 		}),
 	),
 
 	// Processing options
 	compress: Type.Optional(
 		Type.Boolean({
-			description: "Enable signature compression to reduce tokens by ~70%. Default: false.",
+			description:
+				"Enable signature compression to reduce tokens by ~70%. Default: false.",
 		}),
 	),
 
@@ -61,11 +66,16 @@ export const RepomixToolParameters = Type.Object({
 	),
 
 	showLineNumbers: Type.Optional(
-		Type.Boolean({ description: "Add line numbers to output. Default: false." }),
+		Type.Boolean({
+			description: "Add line numbers to output. Default: false.",
+		}),
 	),
 
 	truncateBase64: Type.Optional(
-		Type.Boolean({ description: "Truncate long base64-encoded images/data to save tokens. Default: false." }),
+		Type.Boolean({
+			description:
+				"Truncate long base64-encoded images/data to save tokens. Default: false.",
+		}),
 	),
 
 	// Output structure
@@ -74,7 +84,9 @@ export const RepomixToolParameters = Type.Object({
 	),
 
 	fileSummary: Type.Optional(
-		Type.Boolean({ description: "Include file summary section. Default: true." }),
+		Type.Boolean({
+			description: "Include file summary section. Default: true.",
+		}),
 	),
 
 	directoryStructure: Type.Optional(
@@ -82,12 +94,16 @@ export const RepomixToolParameters = Type.Object({
 	),
 
 	files: Type.Optional(
-		Type.Boolean({ description: "Include actual file contents. Default: true." }),
+		Type.Boolean({
+			description: "Include actual file contents. Default: true.",
+		}),
 	),
 
 	// Git integration
 	gitSortByChanges: Type.Optional(
-		Type.Boolean({ description: "Sort files by git change frequency. Default: false." }),
+		Type.Boolean({
+			description: "Sort files by git change frequency. Default: false.",
+		}),
 	),
 
 	gitIncludeDiffs: Type.Optional(
@@ -99,17 +115,24 @@ export const RepomixToolParameters = Type.Object({
 	),
 
 	gitIncludeLogsCount: Type.Optional(
-		Type.Number({ description: "Number of commit logs to include. Default: 50." }),
+		Type.Number({
+			description: "Number of commit logs to include. Default: 50.",
+		}),
 	),
 
 	// Security
 	securityCheck: Type.Optional(
-		Type.Boolean({ description: "Enable security scanning for sensitive data. Default: true." }),
+		Type.Boolean({
+			description:
+				"Enable security scanning for sensitive data. Default: true.",
+		}),
 	),
 
 	// Token counting
 	tokenEncoding: Type.Optional(
-		Type.String({ description: "Token encoding for counting. Default: o200k_base." }),
+		Type.String({
+			description: "Token encoding for counting. Default: o200k_base.",
+		}),
 	),
 
 	// Output splitting
@@ -126,7 +149,9 @@ export const RepomixToolParameters = Type.Object({
 	),
 
 	includeEmptyDirectories: Type.Optional(
-		Type.Boolean({ description: "Include empty directories in tree. Default: false." }),
+		Type.Boolean({
+			description: "Include empty directories in tree. Default: false.",
+		}),
 	),
 
 	maxFileSize: Type.Optional(
@@ -148,13 +173,18 @@ export const RepomixToolParameters = Type.Object({
 					}),
 				),
 			],
-			{ description: "Per-glob compression overrides. Each item has: pattern (glob), optional compress (boolean), optional directoryStructureOnly (boolean). Evaluated in order, first match wins." },
+			{
+				description:
+					"Per-glob compression overrides. Each item has: pattern (glob), optional compress (boolean), optional directoryStructureOnly (boolean). Evaluated in order, first match wins.",
+			},
 		),
 		true,
 	),
 
 	// Instruction file
 	instructionFilePath: Type.Optional(
-		Type.String({ description: "Path to a file containing custom instructions." }),
+		Type.String({
+			description: "Path to a file containing custom instructions.",
+		}),
 	),
 });

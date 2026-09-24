@@ -2,12 +2,12 @@
  * Tests for output styles.
  */
 
-import { describe, it, expect } from "vitest";
-import { generateXml } from "../../output/styles/xmlStyle.js";
-import { generateMarkdown } from "../../output/styles/markdownStyle.js";
-import { generateJson } from "../../output/styles/jsonStyle.js";
-import { generatePlain } from "../../output/styles/plainStyle.js";
+import { describe, expect, it } from "vitest";
 import type { OutputContext } from "../../output/generator.js";
+import { generateJson } from "../../output/styles/jsonStyle.js";
+import { generateMarkdown } from "../../output/styles/markdownStyle.js";
+import { generatePlain } from "../../output/styles/plainStyle.js";
+import { generateXml } from "../../output/styles/xmlStyle.js";
 
 function createContext(overrides: Partial<OutputContext> = {}): OutputContext {
 	return {
@@ -25,7 +25,8 @@ function createContext(overrides: Partial<OutputContext> = {}): OutputContext {
 			},
 			{
 				path: "src/utils.ts",
-				content: "export function add(a: number, b: number): number {\n\treturn a + b;\n}",
+				content:
+					"export function add(a: number, b: number): number {\n\treturn a + b;\n}",
 				language: "typescript",
 				tokens: 15,
 				lines: 3,
@@ -44,7 +45,7 @@ describe("output/styles", () => {
 	describe("generateXml", () => {
 		it("should generate valid XML output", () => {
 			const result = generateXml(createContext());
-			expect(result).toContain("<?xml version=\"1.0\"");
+			expect(result).toContain('<?xml version="1.0"');
 			expect(result).toContain("<file>");
 			expect(result).toContain("</file>");
 		});
@@ -220,9 +221,7 @@ describe("output/styles", () => {
 		});
 
 		it("should include header text when provided", () => {
-			const result = generatePlain(
-				createContext({ headerText: "My Header" }),
-			);
+			const result = generatePlain(createContext({ headerText: "My Header" }));
 			expect(result).toContain("My Header");
 		});
 

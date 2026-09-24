@@ -3,14 +3,13 @@
  * Selects the appropriate style and generates the final output.
  */
 
-import type { ProcessedFile } from "../scan/types.js";
 import type { RepomixConfigMerged } from "../config/types.js";
-import { generateXml } from "./styles/xmlStyle.js";
-import { generateMarkdown } from "./styles/markdownStyle.js";
-import { generateJson } from "./styles/jsonStyle.js";
-import { generatePlain } from "./styles/plainStyle.js";
 import { generateFileTree } from "../scan/fileTree.js";
-import { countTokens } from "../metrics/tokenCounter.js";
+import type { ProcessedFile } from "../scan/types.js";
+import { generateJson } from "./styles/jsonStyle.js";
+import { generateMarkdown } from "./styles/markdownStyle.js";
+import { generatePlain } from "./styles/plainStyle.js";
+import { generateXml } from "./styles/xmlStyle.js";
 
 export interface OutputContext {
 	headerText?: string;
@@ -58,10 +57,10 @@ export async function generateOutput(
 		.map((f) => ({ path: f.path, tokens: f.tokens, lines: f.lines }));
 
 	// Generate directory tree if needed
-	let directoryTree: string | undefined;
+	let _directoryTree: string | undefined;
 	if (config.output.directoryStructure) {
 		const filePaths = processedFiles.map((f) => f.path);
-		directoryTree = generateFileTree(filePaths);
+		_directoryTree = generateFileTree(filePaths);
 	}
 
 	const outputContext: OutputContext = {
@@ -86,7 +85,6 @@ export async function generateOutput(
 			return generateMarkdown(outputContext);
 		case "json":
 			return generateJson(outputContext);
-		case "plain":
 		default:
 			return generatePlain(outputContext);
 	}
@@ -105,14 +103,14 @@ export function splitOutput(
 	let currentContent = "";
 
 	const lines = content.split("\n");
-	let inFileBlock = false;
-	let currentFileHeader = "";
+	const _inFileBlock = false;
+	const _currentFileHeader = "";
 
 	for (const line of lines) {
-		const lineBytes = Buffer.byteLength(line, "utf8");
+		const _lineBytes = Buffer.byteLength(line, "utf8");
 
 		// Check if adding this line would exceed the limit
-		const testContent = currentContent ? currentContent + "\n" + line : line;
+		const testContent = currentContent ? `${currentContent}\n${line}` : line;
 		const testBytes = Buffer.byteLength(testContent, "utf8");
 
 		if (testBytes > maxBytes && currentContent) {
@@ -138,7 +136,9 @@ export function splitOutput(
 		});
 	}
 
-	return parts.length > 0 ? parts : [{ filePath: baseFilePath, content, index: 1 }];
+	return parts.length > 0
+		? parts
+		: [{ filePath: baseFilePath, content, index: 1 }];
 }
 
 /**

@@ -26,7 +26,10 @@ export async function sortByGitChanges(
 /**
  * Get the number of commits that touched each file.
  */
-async function getFileCommitCounts(gitRoot: string, maxCommits: number): Promise<Map<string, number>> {
+async function getFileCommitCounts(
+	gitRoot: string,
+	maxCommits: number,
+): Promise<Map<string, number>> {
 	return new Promise((resolve) => {
 		execFile(
 			"git",

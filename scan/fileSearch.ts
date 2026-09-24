@@ -5,9 +5,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import { minimatch } from "minimatch";
-import type { FileSearchResult, SkippedFile } from "./types.js";
 import type { RepomixConfigMerged } from "../config/types.js";
-import { resolveIgnorePatterns, createIgnoreFilter } from "./ignorePatterns.js";
+import { createIgnoreFilter, resolveIgnorePatterns } from "./ignorePatterns.js";
+import type { FileSearchResult, SkippedFile } from "./types.js";
 
 /**
  * Search for files in a directory based on config.
@@ -71,7 +71,8 @@ async function scanDirectory(
 	entries.sort((a, b) => a.name.localeCompare(b.name));
 
 	for (const entry of entries) {
-		const relativePath = relativeDir === "." ? entry.name : `${relativeDir}/${entry.name}`;
+		const relativePath =
+			relativeDir === "." ? entry.name : `${relativeDir}/${entry.name}`;
 
 		// Check ignore patterns
 		if (ignoreFilter(relativePath)) {
@@ -82,10 +83,19 @@ async function scanDirectory(
 
 		if (entry.isDirectory()) {
 			state.allDirectories.add(relativePath);
-			await scanDirectory(absolutePath, relativePath, ignoreFilter, config, state);
+			await scanDirectory(
+				absolutePath,
+				relativePath,
+				ignoreFilter,
+				config,
+				state,
+			);
 		} else if (entry.isFile()) {
 			// Check if file matches include patterns
-			const matchesInclude = matchesIncludePatterns(relativePath, config.include);
+			const matchesInclude = matchesIncludePatterns(
+				relativePath,
+				config.include,
+			);
 
 			if (!matchesInclude) {
 				continue;
@@ -117,10 +127,17 @@ async function scanDirectory(
 	}
 
 	// Check for empty directories
-	if (state.allDirectories.has(relativeDir) && !state.visibleFiles.has(relativeDir)) {
+	if (
+		state.allDirectories.has(relativeDir) &&
+		!state.visibleFiles.has(relativeDir)
+	) {
 		// This directory has subdirectories but no visible files
-		const subdirs = [...state.allDirectories].filter((d) => d.startsWith(`${relativeDir}/`) && d !== relativeDir);
-		const hasVisibleSubdirs = subdirs.some((d) => state.visibleFiles.has(d) || hasVisibleChildren(d, state));
+		const subdirs = [...state.allDirectories].filter(
+			(d) => d.startsWith(`${relativeDir}/`) && d !== relativeDir,
+		);
+		const hasVisibleSubdirs = subdirs.some(
+			(d) => state.visibleFiles.has(d) || hasVisibleChildren(d, state),
+		);
 		if (!hasVisibleSubdirs) {
 			state.emptyDirPaths.push(relativeDir);
 		}
@@ -142,9 +159,14 @@ function hasVisibleChildren(dir: string, state: ScanState): boolean {
 /**
  * Check if a file path matches any of the include patterns.
  */
-function matchesIncludePatterns(filePath: string, includePatterns: string[]): boolean {
+function matchesIncludePatterns(
+	filePath: string,
+	includePatterns: string[],
+): boolean {
 	if (includePatterns.length === 0) {
 		return true;
 	}
-	return includePatterns.some((pattern) => minimatch(filePath, pattern, { dot: true }));
+	return includePatterns.some((pattern) =>
+		minimatch(filePath, pattern, { dot: true }),
+	);
 }

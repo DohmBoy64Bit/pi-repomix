@@ -3,15 +3,14 @@
  * Applies transformations in order: comment removal → compression → base64 truncate → empty line removal → trim → line numbers
  */
 
-import type { RawFile } from "../scan/types.js";
-import type { ProcessedFile } from "../scan/types.js";
 import type { RepomixConfigMerged } from "../config/types.js";
+import { countTokens } from "../metrics/tokenCounter.js";
+import type { ProcessedFile, RawFile } from "../scan/types.js";
+import { truncateBase64 } from "./base64Truncate.js";
 import { removeComments } from "./commentRemoval.js";
 import { compressContent } from "./compression.js";
 import { removeEmptyLines } from "./emptyLines.js";
 import { addLineNumbers } from "./lineNumbers.js";
-import { truncateBase64 } from "./base64Truncate.js";
-import { countTokens } from "../metrics/tokenCounter.js";
 
 /**
  * Process a single file through the transformation pipeline.
@@ -93,7 +92,10 @@ export async function processFiles(
 /**
  * Check if a file path should be directoryStructureOnly (skip content).
  */
-export function isDirectoryStructureOnly(filePath: string, patterns: RepomixConfigMerged["output"]["patterns"]): boolean {
+export function isDirectoryStructureOnly(
+	filePath: string,
+	patterns: RepomixConfigMerged["output"]["patterns"],
+): boolean {
 	const patternMatch = getMatchingPattern(filePath, patterns);
 	return patternMatch?.directoryStructureOnly ?? false;
 }

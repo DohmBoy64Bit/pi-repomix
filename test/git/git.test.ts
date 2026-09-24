@@ -2,16 +2,22 @@
  * Tests for Git repository utilities.
  */
 
-import { describe, it, expect } from "vitest";
-import { isGitRepository, getGitRoot } from "../../git/repository.js";
-import { getGitDiff } from "../../git/diff.js";
-import { parseGitDiffOutput, parseGitDiffStatOutput } from "../../git/diff.js";
-import { parseCommitLogOutput, parseCommitLogWithFiles } from "../../git/log.js";
-import { sortByGitChanges } from "../../git/sort.js";
-import { mkdtempSync, writeFileSync, mkdirSync, rmSync } from "node:fs";
-import { join } from "node:path";
-import { tmpdir } from "node:os";
 import { execSync } from "node:child_process";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { describe, expect, it } from "vitest";
+import {
+	getGitDiff,
+	parseGitDiffOutput,
+	parseGitDiffStatOutput,
+} from "../../git/diff.js";
+import {
+	parseCommitLogOutput,
+	parseCommitLogWithFiles,
+} from "../../git/log.js";
+import { getGitRoot, isGitRepository } from "../../git/repository.js";
+import { sortByGitChanges } from "../../git/sort.js";
 
 describe("git/repository", () => {
 	describe("isGitRepository", () => {
@@ -35,7 +41,9 @@ describe("git/repository", () => {
 		});
 
 		it("should return false for non-existent directory", () => {
-			expect(isGitRepository("/nonexistent/path/that/does/not/exist")).toBe(false);
+			expect(isGitRepository("/nonexistent/path/that/does/not/exist")).toBe(
+				false,
+			);
 		});
 
 		it("should return false for current directory if not a git repo", () => {
@@ -105,8 +113,8 @@ index abc123..def456 100644
 			const result = parseGitDiffOutput(diff);
 
 			expect(result).toHaveLength(1);
-			expect(result[0]!.file).toBe("file.ts");
-			expect(result[0]!.hunks).toHaveLength(1);
+			expect(result[0]?.file).toBe("file.ts");
+			expect(result[0]?.hunks).toHaveLength(1);
 		});
 
 		it("should parse multiple file diffs", () => {
@@ -129,8 +137,8 @@ index abc123..def456 100644
 			const result = parseGitDiffOutput(diff);
 
 			expect(result).toHaveLength(2);
-			expect(result[0]!.file).toBe("file1.ts");
-			expect(result[1]!.file).toBe("file2.ts");
+			expect(result[0]?.file).toBe("file1.ts");
+			expect(result[1]?.file).toBe("file2.ts");
 		});
 
 		it("should handle empty diff", () => {
@@ -155,7 +163,7 @@ index abc123..def456 100644
 			const result = parseGitDiffOutput(diff);
 
 			expect(result).toHaveLength(1);
-			expect(result[0]!.file).toBe("src/app.ts");
+			expect(result[0]?.file).toBe("src/app.ts");
 		});
 
 		it("should parse diff hunks correctly", () => {
@@ -170,9 +178,9 @@ index abc123..def456 100644
 			const result = parseGitDiffOutput(diff);
 
 			expect(result).toHaveLength(1);
-			expect(result[0]!.hunks).toHaveLength(1);
-			expect(result[0]!.hunks[0]!.start).toBe(1);
-			expect(result[0]!.hunks[0]!.lines).toBeDefined();
+			expect(result[0]?.hunks).toHaveLength(1);
+			expect(result[0]?.hunks[0]?.start).toBe(1);
+			expect(result[0]?.hunks[0]?.lines).toBeDefined();
 		});
 
 		it("should handle binary file diffs", () => {
@@ -205,8 +213,8 @@ rename to new-name.ts
 			const result = parseGitDiffStatOutput(stat);
 
 			expect(result).toHaveLength(2);
-			expect(result[0]!.file).toBe("file.ts");
-			expect(result[1]!.file).toBe("another.ts");
+			expect(result[0]?.file).toBe("file.ts");
+			expect(result[1]?.file).toBe("another.ts");
 		});
 
 		it("should handle empty stat output", () => {
@@ -220,7 +228,7 @@ rename to new-name.ts
 			const result = parseGitDiffStatOutput(stat);
 
 			expect(result).toHaveLength(1);
-			expect(result[0]!.file).toBe("file.ts");
+			expect(result[0]?.file).toBe("file.ts");
 		});
 
 		it("should handle stat with rename", () => {
@@ -260,8 +268,14 @@ rename to new-name.ts
 			const tempDir = mkdtempSync(join(tmpdir(), "repomix-test-"));
 			try {
 				execSync("git init", { cwd: tempDir, stdio: "pipe" });
-				execSync('git config user.email "test@test.com"', { cwd: tempDir, stdio: "pipe" });
-				execSync('git config user.name "Test"', { cwd: tempDir, stdio: "pipe" });
+				execSync('git config user.email "test@test.com"', {
+					cwd: tempDir,
+					stdio: "pipe",
+				});
+				execSync('git config user.name "Test"', {
+					cwd: tempDir,
+					stdio: "pipe",
+				});
 
 				writeFileSync(join(tempDir, "file.ts"), "const x = 1;");
 				execSync("git add .", { cwd: tempDir, stdio: "pipe" });
@@ -295,8 +309,8 @@ Date:   Mon Jan 1 12:00:00 2024 +0000
 			const result = parseCommitLogOutput(log);
 
 			expect(result).toHaveLength(1);
-			expect(result[0]!.message).toContain("Initial commit");
-			expect(result[0]!.date).toBeDefined();
+			expect(result[0]?.message).toContain("Initial commit");
+			expect(result[0]?.date).toBeDefined();
 		});
 
 		it("should parse multiple commits", () => {
@@ -316,8 +330,8 @@ Date:   Tue Jan 2 12:00:00 2024 +0000
 			const result = parseCommitLogOutput(log);
 
 			expect(result).toHaveLength(2);
-			expect(result[0]!.message).toContain("First commit");
-			expect(result[1]!.message).toContain("Second commit");
+			expect(result[0]?.message).toContain("First commit");
+			expect(result[1]?.message).toContain("Second commit");
 		});
 
 		it("should handle empty log", () => {
@@ -337,7 +351,7 @@ Date:   Mon Jan 1 12:00:00 2024 +0000
 			const result = parseCommitLogOutput(log);
 
 			expect(result).toHaveLength(1);
-			expect(result[0]!.message).toBeDefined();
+			expect(result[0]?.message).toBeDefined();
 		});
 
 		it("should handle commit with no files", () => {
@@ -351,7 +365,7 @@ Date:   Mon Jan 1 12:00:00 2024 +0000
 			const result = parseCommitLogOutput(log);
 
 			expect(result).toHaveLength(1);
-			expect(result[0]!.files).toEqual([]);
+			expect(result[0]?.files).toEqual([]);
 		});
 	});
 
@@ -371,9 +385,9 @@ Date:   Mon Jan 1 12:00:00 2024 +0000
 			const result = parseCommitLogWithFiles(log);
 
 			expect(result).toHaveLength(1);
-			expect(result[0]!.files).toContain("file1.ts");
-			expect(result[0]!.files).toContain("file2.ts");
-			expect(result[0]!.files).toContain("file3.ts");
+			expect(result[0]?.files).toContain("file1.ts");
+			expect(result[0]?.files).toContain("file2.ts");
+			expect(result[0]?.files).toContain("file3.ts");
 		});
 
 		it("should handle commit with no files section", () => {
@@ -387,7 +401,7 @@ Date:   Mon Jan 1 12:00:00 2024 +0000
 			const result = parseCommitLogWithFiles(log);
 
 			expect(result).toHaveLength(1);
-			expect(result[0]!.files).toEqual([]);
+			expect(result[0]?.files).toEqual([]);
 		});
 
 		it("should handle empty log", () => {
@@ -417,9 +431,9 @@ Date:   Tue Jan 2 12:00:00 2024 +0000
 			const result = parseCommitLogWithFiles(log);
 
 			expect(result).toHaveLength(2);
-			expect(result[0]!.files).toContain("file1.ts");
-			expect(result[1]!.files).toContain("file2.ts");
-			expect(result[1]!.files).toContain("file3.ts");
+			expect(result[0]?.files).toContain("file1.ts");
+			expect(result[1]?.files).toContain("file2.ts");
+			expect(result[1]?.files).toContain("file3.ts");
 		});
 	});
 });
@@ -433,7 +447,10 @@ describe("git/sort", () => {
 				{ path: "moderate.ts", content: "const z = 3;" },
 			];
 
-			const result = await sortByGitChanges(files.map((f) => f.path), "/nonexistent");
+			const result = await sortByGitChanges(
+				files.map((f) => f.path),
+				"/nonexistent",
+			);
 
 			// Should return files (order may vary if no git repo)
 			expect(result).toHaveLength(3);
@@ -446,7 +463,10 @@ describe("git/sort", () => {
 
 		it("should handle single file", async () => {
 			const files = [{ path: "single.ts", content: "const x = 1;" }];
-			const result = await sortByGitChanges(files.map((f) => f.path), "/nonexistent");
+			const result = await sortByGitChanges(
+				files.map((f) => f.path),
+				"/nonexistent",
+			);
 			expect(result).toHaveLength(1);
 		});
 
@@ -457,7 +477,10 @@ describe("git/sort", () => {
 					{ path: "a.ts", content: "const a = 1;" },
 					{ path: "b.ts", content: "const b = 2;" },
 				];
-				const result = await sortByGitChanges(files.map((f) => f.path), tempDir);
+				const result = await sortByGitChanges(
+					files.map((f) => f.path),
+					tempDir,
+				);
 				expect(result).toHaveLength(2);
 			} finally {
 				try {
@@ -481,7 +504,10 @@ describe("git/sort", () => {
 				writeFileSync(join(tempDir, "a.ts"), "const a = 1;");
 				writeFileSync(join(tempDir, "b.ts"), "const b = 2;");
 
-				const result = await sortByGitChanges(files.map((f) => f.path), tempDir);
+				const result = await sortByGitChanges(
+					files.map((f) => f.path),
+					tempDir,
+				);
 				expect(result).toHaveLength(2);
 			} finally {
 				try {

@@ -17,7 +17,9 @@ export function generatePlain(context: OutputContext): string {
 	parts.push(SECTION_SEPARATOR);
 	parts.push("");
 	parts.push(`Generated on: ${context.generationDate}`);
-	parts.push(`Files: ${context.totalFiles} | Lines: ${context.totalLines} | Tokens: ${context.totalTokens}`);
+	parts.push(
+		`Files: ${context.totalFiles} | Lines: ${context.totalLines} | Tokens: ${context.totalTokens}`,
+	);
 	parts.push("");
 
 	// Summary
@@ -74,7 +76,9 @@ export function generatePlain(context: OutputContext): string {
 		for (const file of context.processedFiles) {
 			parts.push(FILE_SEPARATOR);
 			parts.push(`File: ${file.path}`);
-			parts.push(`Language: ${file.language} | Tokens: ${file.tokens} | Lines: ${file.lines}`);
+			parts.push(
+				`Language: ${file.language} | Tokens: ${file.tokens} | Lines: ${file.lines}`,
+			);
 			parts.push(FILE_SEPARATOR);
 			parts.push("");
 			parts.push(file.content);
@@ -90,7 +94,9 @@ export function generatePlain(context: OutputContext): string {
 		parts.push(SECTION_SEPARATOR);
 		parts.push("");
 		parts.push(`Branch: ${context.gitBranch}`);
-		parts.push(`Status: ${context.gitStatus === "dirty" ? "Dirty (uncommitted changes)" : "Clean"}`);
+		parts.push(
+			`Status: ${context.gitStatus === "dirty" ? "Dirty (uncommitted changes)" : "Clean"}`,
+		);
 		parts.push("");
 	}
 

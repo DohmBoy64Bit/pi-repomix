@@ -3,21 +3,23 @@
  * Orchestrates the full pipeline: scan → read → process → output.
  */
 
-import fs from "node:fs/promises";
 import fsSync from "node:fs";
+import fs from "node:fs/promises";
 import path from "node:path";
-import type { RepomixConfigMerged } from "../config/types.js";
 import { loadConfig } from "../config/loader.js";
-import { resolveOutputPath } from "../utils/outputPath.js";
-import { searchFiles } from "../scan/fileSearch.js";
-import { readFilesInParallel } from "../scan/fileRead.js";
-import { processFiles, isDirectoryStructureOnly } from "../process/pipeline.js";
-import { generateOutput, splitOutput } from "../output/generator.js";
-import { scanFilesForSecurity, generateSecurityReport } from "../security/scanner.js";
 import { getGitDiff } from "../git/diff.js";
 import { getCommitLogsWithFiles } from "../git/log.js";
+import { getGitRoot, getGitStatus } from "../git/repository.js";
 import { sortByGitChanges } from "../git/sort.js";
-import { isGitRepository, getGitRoot, getGitStatus } from "../git/repository.js";
+import { generateOutput, splitOutput } from "../output/generator.js";
+import { isDirectoryStructureOnly, processFiles } from "../process/pipeline.js";
+import { readFilesInParallel } from "../scan/fileRead.js";
+import { searchFiles } from "../scan/fileSearch.js";
+import {
+	generateSecurityReport,
+	scanFilesForSecurity,
+} from "../security/scanner.js";
+import { resolveOutputPath } from "../utils/outputPath.js";
 
 export interface RepomixResult {
 	outputPath: string;
@@ -53,19 +55,26 @@ export async function executeRepomix(
 
 	// 1. Load configuration
 	// Pass the resolved outputFile to config overrides so it's used as the default
-	const configOverrides = { ...args, output: { ...args.output, filePath: outputFile } };
+	const configOverrides = {
+		...args,
+		output: { ...args.output, filePath: outputFile },
+	};
 	const config = await loadConfig(targetDir, configOverrides);
 
 	// 2. Search for files
 	const searchResult = await searchFiles(targetDir, config);
 
 	if (searchResult.filePaths.length === 0) {
-		throw new Error(`No files found matching the specified criteria in ${targetDir}`);
+		throw new Error(
+			`No files found matching the specified criteria in ${targetDir}`,
+		);
 	}
 
 	// Add warnings for skipped files
 	for (const skipped of searchResult.skippedFiles) {
-		warnings.push(`${skipped.path}: ${skipped.reason}${skipped.details ? ` (${skipped.details})` : ""}`);
+		warnings.push(
+			`${skipped.path}: ${skipped.reason}${skipped.details ? ` (${skipped.details})` : ""}`,
+		);
 	}
 
 	// 3. Read files
@@ -74,7 +83,9 @@ export async function executeRepomix(
 	// 4. Security scan
 	let suspiciousPaths: string[] = [];
 	if (config.security.enableSecurityCheck) {
-		const suspiciousFiles = scanFilesForSecurity(rawFiles.map((f) => ({ path: f.path, content: f.content })));
+		const suspiciousFiles = scanFilesForSecurity(
+			rawFiles.map((f) => ({ path: f.path, content: f.content })),
+		);
 		if (suspiciousFiles.length > 0) {
 			suspiciousPaths = suspiciousFiles.map((f) => f.path);
 			const report = generateSecurityReport(suspiciousFiles);
@@ -90,22 +101,36 @@ export async function executeRepomix(
 	let gitBranch: string | undefined;
 	let gitStatusLabel: "clean" | "dirty" | undefined;
 
-	if (config.output.git.includeDiffs || config.output.git.includeLogs || config.output.git.sortByChanges) {
+	if (
+		config.output.git.includeDiffs ||
+		config.output.git.includeLogs ||
+		config.output.git.sortByChanges
+	) {
 		const gitRoot = await getGitRoot(cwd);
 
 		if (gitRoot) {
 			if (config.output.git.includeDiffs) {
-				const diff = await getGitDiff(gitRoot, { workTree: true, staged: true });
+				const diff = await getGitDiff(gitRoot, {
+					workTree: true,
+					staged: true,
+				});
 				gitDiff = diff.workTree;
 				gitDiffStaged = diff.staged;
 			}
 
 			if (config.output.git.includeLogs) {
-				gitLogs = await getCommitLogsWithFiles(gitRoot, config.output.git.includeLogsCount);
+				gitLogs = await getCommitLogsWithFiles(
+					gitRoot,
+					config.output.git.includeLogsCount,
+				);
 			}
 
 			if (config.output.git.sortByChanges) {
-				sortedPaths = await sortByGitChanges(searchResult.filePaths, gitRoot, config.output.git.sortByChangesMaxCommits);
+				sortedPaths = await sortByGitChanges(
+					searchResult.filePaths,
+					gitRoot,
+					config.output.git.sortByChangesMaxCommits,
+				);
 			}
 
 			// Get branch name and clean/dirty status
@@ -113,20 +138,28 @@ export async function executeRepomix(
 			gitBranch = gitStatus.branch;
 			gitStatusLabel = gitStatus.isClean ? "clean" : "dirty";
 		} else {
-			if (config.output.git.sortByChanges || config.output.git.includeDiffs || config.output.git.includeLogs) {
+			if (
+				config.output.git.sortByChanges ||
+				config.output.git.includeDiffs ||
+				config.output.git.includeLogs
+			) {
 				warnings.push("Git integration requested but no git repository found.");
 			}
 		}
 	}
 
 	// 6. Process files
-	const processedFiles = await processFiles(rawFiles, config, (processed, total) => {
-		// Progress callback (for future use)
-	});
+	const processedFiles = await processFiles(
+		rawFiles,
+		config,
+		(_processed, _total) => {
+			// Progress callback (for future use)
+		},
+	);
 
 	// Apply git-based sorting if enabled
 	if (sortedPaths) {
-		const sortedSet = new Set(sortedPaths);
+		const _sortedSet = new Set(sortedPaths);
 		processedFiles.sort((a, b) => {
 			const aIndex = sortedPaths?.indexOf(a.path) ?? -1;
 			const bIndex = sortedPaths?.indexOf(b.path) ?? -1;
@@ -135,7 +168,9 @@ export async function executeRepomix(
 	}
 
 	// Filter out directoryStructureOnly files
-	const filesToInclude = processedFiles.filter((f) => !isDirectoryStructureOnly(f.path, config.output.patterns));
+	const filesToInclude = processedFiles.filter(
+		(f) => !isDirectoryStructureOnly(f.path, config.output.patterns),
+	);
 
 	// 7. Generate output
 	const output = await generateOutput(filesToInclude, config, {
@@ -145,16 +180,24 @@ export async function executeRepomix(
 		gitLogs,
 		gitBranch,
 		gitStatus: gitStatusLabel,
-		skippedFiles: searchResult.skippedFiles.map((s) => ({ path: s.path, reason: s.reason, details: s.details })),
+		skippedFiles: searchResult.skippedFiles.map((s) => ({
+			path: s.path,
+			reason: s.reason,
+			details: s.details,
+		})),
 	});
 
 	// 8. Handle output splitting
 	const outputBytes = Buffer.byteLength(output, "utf8");
 	let splitFiles: string[] = [];
-	let outputPath = config.output.filePath;
+	const outputPath = config.output.filePath;
 
 	if (config.output.splitOutput && outputBytes > config.output.splitOutput) {
-		const parts = splitOutput(output, config.output.splitOutput, config.output.filePath);
+		const parts = splitOutput(
+			output,
+			config.output.splitOutput,
+			config.output.filePath,
+		);
 		splitFiles = parts.map((p) => p.filePath);
 
 		// Write split files
@@ -164,14 +207,16 @@ export async function executeRepomix(
 
 		// Write index file
 		const firstFile = splitFiles[0] ?? "";
-		const indexPath = firstFile.replace(/\-\d+/, "-index");
+		const indexPath = firstFile.replace(/-\d+/, "-index");
 		await fs.writeFile(
 			indexPath,
 			`Repomix Output Index\nGenerated: ${new Date().toISOString()}\nTotal parts: ${parts.length}\n\nFiles:\n${splitFiles.map((f, i) => `  ${i + 1}. ${f}`).join("\n")}\n`,
 			"utf-8",
 		);
 
-		warnings.push(`Output split into ${parts.length} files (exceeded ${config.output.splitOutput} bytes)`);
+		warnings.push(
+			`Output split into ${parts.length} files (exceeded ${config.output.splitOutput} bytes)`,
+		);
 	} else {
 		// Ensure output directory exists
 		const outputDir = path.dirname(outputPath);
@@ -189,14 +234,18 @@ export async function executeRepomix(
 	const totalLines = filesToInclude.reduce((sum, f) => sum + f.lines, 0);
 
 	return {
-		outputPath: splitFiles.length > 0 ? (splitFiles[0] ?? outputPath) : outputPath,
+		outputPath:
+			splitFiles.length > 0 ? (splitFiles[0] ?? outputPath) : outputPath,
 		totalFiles: filesToInclude.length,
 		totalTokens,
 		totalLines,
 		outputSize: outputBytes,
 		splitFiles: splitFiles.length > 0 ? splitFiles : [outputPath],
 		warnings,
-		skippedFiles: searchResult.skippedFiles.map((s) => ({ path: s.path, reason: s.reason })),
+		skippedFiles: searchResult.skippedFiles.map((s) => ({
+			path: s.path,
+			reason: s.reason,
+		})),
 		suspiciousFiles: suspiciousPaths.length > 0 ? suspiciousPaths : undefined,
 	};
 }

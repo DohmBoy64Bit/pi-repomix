@@ -92,7 +92,10 @@ export function parseArgs(args: string): PartialRepomixArgs {
 		}
 
 		// --show-line-numbers
-		if (token === "--show-line-numbers" || token === "--output-show-line-numbers") {
+		if (
+			token === "--show-line-numbers" ||
+			token === "--output-show-line-numbers"
+		) {
 			result.showLineNumbers = true;
 			continue;
 		}
@@ -154,7 +157,7 @@ export function parseArgs(args: string): PartialRepomixArgs {
 			const value = tokens[i];
 			if (value) {
 				const parsed = parseInt(value, 10);
-				if (!isNaN(parsed)) {
+				if (!Number.isNaN(parsed)) {
 					result.gitSortByChangesMaxCommits = parsed;
 				}
 			}
@@ -176,8 +179,8 @@ export function parseArgs(args: string): PartialRepomixArgs {
 		// --git-include-logs-count
 		if (token === "--git-include-logs-count") {
 			i++;
-			const count = parseInt(tokens[i] ?? "50");
-			if (!isNaN(count)) {
+			const count = parseInt(tokens[i] ?? "50", 10);
+			if (!Number.isNaN(count)) {
 				result.gitIncludeLogsCount = count;
 			}
 			continue;
@@ -236,7 +239,6 @@ export function parseArgs(args: string): PartialRepomixArgs {
 		if (token === "--instruction-file-path") {
 			i++;
 			result.instructionFilePath = tokens[i];
-			continue;
 		}
 	}
 
@@ -262,7 +264,12 @@ function tokenize(input: string): string[] {
 			}
 		} else if (char === '"' || char === "'" || char === "`") {
 			inQuote = char;
-		} else if (char === " " || char === "\t" || char === "\n" || char === "\r") {
+		} else if (
+			char === " " ||
+			char === "\t" ||
+			char === "\n" ||
+			char === "\r"
+		) {
 			if (current) {
 				tokens.push(current);
 				current = "";
@@ -285,8 +292,8 @@ function tokenize(input: string): string[] {
 function parseSizeBytes(value: string): number | undefined {
 	const match = value.match(/^(\d+(?:\.\d+)?)\s*(kb|mb|gb|b)?$/i);
 	if (!match) {
-		const num = parseInt(value);
-		return isNaN(num) ? undefined : num;
+		const num = parseInt(value, 10);
+		return Number.isNaN(num) ? undefined : num;
 	}
 
 	const num = parseFloat(match[1] ?? "0");
@@ -299,7 +306,6 @@ function parseSizeBytes(value: string): number | undefined {
 			return Math.floor(num * 1024 * 1024);
 		case "gb":
 			return Math.floor(num * 1024 * 1024 * 1024);
-		case "b":
 		default:
 			return Math.floor(num);
 	}

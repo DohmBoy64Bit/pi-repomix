@@ -2,12 +2,17 @@
  * Tests for configuration loader.
  */
 
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { loadConfig } from "../../config/loader.js";
-import { writeFileSync, rmSync, existsSync, mkdirSync } from "node:fs";
-import { join } from "node:path";
+import {
+	existsSync,
+	mkdirSync,
+	mkdtempSync,
+	rmSync,
+	writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
-import { mkdtempSync } from "node:fs";
+import { join } from "node:path";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { loadConfig } from "../../config/loader.js";
 import type { RepomixConfig } from "../../config/types.js";
 
 describe("config/loader", () => {
@@ -61,12 +66,18 @@ describe("config/loader", () => {
 			const repomixJsonPath = join(testDir, ".repomix.json");
 			const configJsonPath = join(testDir, "repomix.config.json");
 
-			writeFileSync(repomixJsonPath, JSON.stringify({
-				output: { filePath: ".repomix-output.txt" },
-			}));
-			writeFileSync(configJsonPath, JSON.stringify({
-				output: { filePath: "config-output.txt" },
-			}));
+			writeFileSync(
+				repomixJsonPath,
+				JSON.stringify({
+					output: { filePath: ".repomix-output.txt" },
+				}),
+			);
+			writeFileSync(
+				configJsonPath,
+				JSON.stringify({
+					output: { filePath: "config-output.txt" },
+				}),
+			);
 
 			const loaded = await loadConfig(testDir);
 			expect(loaded.output.filePath).toBe(".repomix-output.txt");
@@ -90,7 +101,10 @@ describe("config/loader", () => {
 
 		it("should merge config with defaults", async () => {
 			const configPath = join(testDir, ".repomix.json");
-			writeFileSync(configPath, JSON.stringify({ output: { filePath: "custom.txt" } }));
+			writeFileSync(
+				configPath,
+				JSON.stringify({ output: { filePath: "custom.txt" } }),
+			);
 
 			const loaded = await loadConfig(testDir);
 			expect(loaded.output.filePath).toBe("custom.txt");
@@ -100,9 +114,12 @@ describe("config/loader", () => {
 
 		it("should load ignore patterns from config", async () => {
 			const configPath = join(testDir, ".repomix.json");
-			writeFileSync(configPath, JSON.stringify({
-				ignore: { customPatterns: ["**/*.log", "**/.env"] },
-			}));
+			writeFileSync(
+				configPath,
+				JSON.stringify({
+					ignore: { customPatterns: ["**/*.log", "**/.env"] },
+				}),
+			);
 
 			const loaded = await loadConfig(testDir);
 			expect(loaded.ignore.customPatterns).toEqual(["**/*.log", "**/.env"]);
@@ -110,9 +127,12 @@ describe("config/loader", () => {
 
 		it("should load security config from config", async () => {
 			const configPath = join(testDir, ".repomix.json");
-			writeFileSync(configPath, JSON.stringify({
-				security: { enableSecurityCheck: false },
-			}));
+			writeFileSync(
+				configPath,
+				JSON.stringify({
+					security: { enableSecurityCheck: false },
+				}),
+			);
 
 			const loaded = await loadConfig(testDir);
 			expect(loaded.security.enableSecurityCheck).toBe(false);
@@ -120,9 +140,12 @@ describe("config/loader", () => {
 
 		it("should load tokenCount config from config", async () => {
 			const configPath = join(testDir, ".repomix.json");
-			writeFileSync(configPath, JSON.stringify({
-				tokenCount: { encoding: "cl100k_base" },
-			}));
+			writeFileSync(
+				configPath,
+				JSON.stringify({
+					tokenCount: { encoding: "cl100k_base" },
+				}),
+			);
 
 			const loaded = await loadConfig(testDir);
 			expect(loaded.tokenCount.encoding).toBe("cl100k_base");
@@ -130,9 +153,12 @@ describe("config/loader", () => {
 
 		it("should load input config from config", async () => {
 			const configPath = join(testDir, ".repomix.json");
-			writeFileSync(configPath, JSON.stringify({
-				input: { maxFileSize: 10_000_000 },
-			}));
+			writeFileSync(
+				configPath,
+				JSON.stringify({
+					input: { maxFileSize: 10_000_000 },
+				}),
+			);
 
 			const loaded = await loadConfig(testDir);
 			expect(loaded.input.maxFileSize).toBe(10_000_000);
@@ -140,9 +166,12 @@ describe("config/loader", () => {
 
 		it("should load git config from config", async () => {
 			const configPath = join(testDir, ".repomix.json");
-			writeFileSync(configPath, JSON.stringify({
-				output: { git: { sortByChanges: true, includeDiffs: true } },
-			}));
+			writeFileSync(
+				configPath,
+				JSON.stringify({
+					output: { git: { sortByChanges: true, includeDiffs: true } },
+				}),
+			);
 
 			const loaded = await loadConfig(testDir);
 			expect(loaded.output.git.sortByChanges).toBe(true);
@@ -169,7 +198,11 @@ describe("config/loader", () => {
 				},
 				input: { maxFileSize: 10_000_000 },
 				include: ["src/**/*"],
-				ignore: { useGitignore: true, useDefaultPatterns: true, customPatterns: ["*.log"] },
+				ignore: {
+					useGitignore: true,
+					useDefaultPatterns: true,
+					customPatterns: ["*.log"],
+				},
 				security: { enableSecurityCheck: true },
 				tokenCount: { encoding: "o200k_base" },
 			};
@@ -229,9 +262,12 @@ describe("config/loader", () => {
 			mkdirSync(nestedDir, { recursive: true });
 
 			const configPath = join(nestedDir, ".repomix.json");
-			writeFileSync(configPath, JSON.stringify({
-				output: { filePath: "nested-output.txt" },
-			}));
+			writeFileSync(
+				configPath,
+				JSON.stringify({
+					output: { filePath: "nested-output.txt" },
+				}),
+			);
 
 			const loaded = await loadConfig(nestedDir);
 			expect(loaded.output.filePath).toBe("nested-output.txt");

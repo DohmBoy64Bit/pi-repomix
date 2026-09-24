@@ -2,7 +2,7 @@
  * Tests for base64 truncation.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { truncateBase64 } from "../../process/base64Truncate.js";
 
 describe("process/base64Truncate", () => {
@@ -22,7 +22,7 @@ function greet(name: string) {
 			const input = `const data = "${longBase64}`;
 			const result = truncateBase64(input);
 
-			expect(result).toContain("const data = \"");
+			expect(result).toContain('const data = "');
 			expect(result).toContain("base64 content truncated");
 			// The base64 should be truncated to MAX_BASE64_LENGTH (1000)
 			expect(result.length).toBeLessThan(input.length);
@@ -100,8 +100,8 @@ const data = "${longBase64}";
 
 			expect(result).toContain("// Header");
 			expect(result).toContain("// Footer");
-			expect(result).toContain("const data = \"");
-			expect(result).toContain("\";");
+			expect(result).toContain('const data = "');
+			expect(result).toContain('";');
 		});
 
 		it("should handle edge case: exactly at threshold", () => {

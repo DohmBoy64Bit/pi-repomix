@@ -2,7 +2,7 @@
  * Tests for line number addition.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { addLineNumbers } from "../../process/lineNumbers.js";
 
 describe("process/lineNumbers", () => {
@@ -40,7 +40,9 @@ line3`;
 		});
 
 		it("should handle long line numbers with proper padding", () => {
-			const input = Array.from({ length: 100 }, (_, i) => `line${i + 1}`).join("\n");
+			const input = Array.from({ length: 100 }, (_, i) => `line${i + 1}`).join(
+				"\n",
+			);
 			const result = addLineNumbers(input);
 
 			expect(result).toContain("   1 | line1");
@@ -72,7 +74,7 @@ const x = 1; // comment`;
 		it("should handle very long lines", () => {
 			const longLine = "x".repeat(10000);
 			const result = addLineNumbers(longLine);
-			expect(result).toBe("   1 | " + longLine);
+			expect(result).toBe(`   1 | ${longLine}`);
 		});
 
 		it("should handle unicode content", () => {

@@ -2,7 +2,7 @@
  * Tests for command argument parsing.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { parseArgs } from "../../command/args.js";
 
 describe("command/args", () => {
@@ -185,7 +185,9 @@ describe("command/args", () => {
 		});
 
 		it("should handle arguments in different order", () => {
-			const result = parseArgs("--style markdown /path/to/dir --output output.md");
+			const result = parseArgs(
+				"--style markdown /path/to/dir --output output.md",
+			);
 			expect(result.directory).toBe("/path/to/dir");
 			expect(result.style).toBe("markdown");
 			expect(result.output).toBe("output.md");
@@ -217,13 +219,17 @@ describe("command/args", () => {
 		});
 
 		it("should handle mixed valid and unknown arguments", () => {
-			const result = parseArgs("/path/to/dir --output custom.txt --unknown-flag");
+			const result = parseArgs(
+				"/path/to/dir --output custom.txt --unknown-flag",
+			);
 			expect(result.directory).toBe("/path/to/dir");
 			expect(result.output).toBe("custom.txt");
 		});
 
 		it("should parse multiple flags together", () => {
-			const result = parseArgs("--compress --remove-comments --show-line-numbers --copy");
+			const result = parseArgs(
+				"--compress --remove-comments --show-line-numbers --copy",
+			);
 			expect(result.compress).toBe(true);
 			expect(result.removeComments).toBe(true);
 			expect(result.showLineNumbers).toBe(true);

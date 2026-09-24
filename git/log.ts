@@ -85,7 +85,9 @@ export function parseCommitLogOutput(output: string): GitLogCommit[] {
 		// Line 3: (empty)
 		// Line 4+: message
 		const dateLine = lines[2] ?? "unknown";
-		const date = dateLine.startsWith("Date:") ? dateLine.substring(5).trim() : dateLine;
+		const date = dateLine.startsWith("Date:")
+			? dateLine.substring(5).trim()
+			: dateLine;
 
 		// Find the message (after the blank line following Date)
 		let message = "";
@@ -133,7 +135,9 @@ export function parseCommitLogWithFiles(output: string): GitLogCommit[] {
 		// Line N: (empty)
 		// Line N+1+: file changes
 		const dateLine = lines[2] ?? "unknown";
-		const date = dateLine.startsWith("Date:") ? dateLine.substring(5).trim() : dateLine;
+		const date = dateLine.startsWith("Date:")
+			? dateLine.substring(5).trim()
+			: dateLine;
 
 		// Find message and files
 		let message = "";
@@ -165,7 +169,7 @@ export function parseCommitLogWithFiles(output: string): GitLogCommit[] {
 				if (line.trim()) {
 					// Extract just the filename (after the status prefix, handling leading spaces)
 					const fileMatch = line.match(/^\s*[AMDRCU!?]+\s+(.+)$/);
-					if (fileMatch && fileMatch[1]) {
+					if (fileMatch?.[1]) {
 						files.push(fileMatch[1].trim());
 					} else {
 						files.push(line.trim());

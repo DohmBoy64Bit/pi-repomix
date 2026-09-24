@@ -2,7 +2,7 @@
  * Tests for empty line removal.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { removeEmptyLines } from "../../process/emptyLines.js";
 
 describe("process/emptyLines", () => {

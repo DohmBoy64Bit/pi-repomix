@@ -2,7 +2,7 @@
  * Tests for configuration merging.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { mergeConfigs } from "../../config/merge.js";
 import type { RepomixConfig } from "../../config/types.js";
 
@@ -172,8 +172,16 @@ describe("config/merge", () => {
 			const config: RepomixConfig = {
 				output: {
 					patterns: [
-						{ pattern: "**/*.test.ts", compress: false, directoryStructureOnly: true },
-						{ pattern: "**/*.spec.ts", compress: false, directoryStructureOnly: true },
+						{
+							pattern: "**/*.test.ts",
+							compress: false,
+							directoryStructureOnly: true,
+						},
+						{
+							pattern: "**/*.spec.ts",
+							compress: false,
+							directoryStructureOnly: true,
+						},
 					],
 				},
 			};
@@ -208,7 +216,9 @@ describe("config/merge", () => {
 
 			const result = mergeConfigs([config]);
 
-			expect(result.output.instructionFilePath).toBe("./repomix-instruction.md");
+			expect(result.output.instructionFilePath).toBe(
+				"./repomix-instruction.md",
+			);
 		});
 
 		it("should handle splitOutput override", () => {

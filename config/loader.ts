@@ -6,9 +6,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import JSON5 from "json5";
-import { DEFAULTS, DEFAULT_IGNORE_PATTERNS } from "./defaults.js";
-import type { RepomixConfig, RepomixConfigMerged } from "./types.js";
+import { DEFAULTS } from "./defaults.js";
 import { mergeConfigs } from "./merge.js";
+import type { RepomixConfig, RepomixConfigMerged } from "./types.js";
 
 const CONFIG_FILE_NAMES = [
 	".repomix.json",
@@ -36,7 +36,9 @@ export async function findConfigFile(dir: string): Promise<string | null> {
 /**
  * Load a config file and parse it.
  */
-async function loadConfigFile(filePath: string): Promise<Partial<RepomixConfig>> {
+async function loadConfigFile(
+	filePath: string,
+): Promise<Partial<RepomixConfig>> {
 	const content = await fs.promises.readFile(filePath, "utf-8");
 	const fileName = path.basename(filePath);
 

@@ -4,16 +4,21 @@
  */
 
 import type { ExtensionCommandContext } from "@earendil-works/pi-coding-agent";
-import type { PartialRepomixArgs } from "./types.js";
-import { parseArgs } from "./args.js";
 import { executeRepomix } from "../tool/handler.js";
+import { parseArgs } from "./args.js";
 
 /**
  * Handle the /repomix command.
  */
-export async function handleRepomixCommand(args: string, ctx: ExtensionCommandContext): Promise<void> {
+export async function handleRepomixCommand(
+	args: string,
+	ctx: ExtensionCommandContext,
+): Promise<void> {
 	if (ctx.mode !== "tui") {
-		ctx.ui.notify("The /repomix command requires interactive mode (TUI).", "error");
+		ctx.ui.notify(
+			"The /repomix command requires interactive mode (TUI).",
+			"error",
+		);
 		return;
 	}
 

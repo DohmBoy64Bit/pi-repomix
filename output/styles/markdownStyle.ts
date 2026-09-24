@@ -10,7 +10,9 @@ export function generateMarkdown(context: OutputContext): string {
 	// Header
 	parts.push(`# Repository Contents`);
 	parts.push("");
-	parts.push(`This file is a merged representation of the entire codebase, generated on ${context.generationDate}.`);
+	parts.push(
+		`This file is a merged representation of the entire codebase, generated on ${context.generationDate}.`,
+	);
 	parts.push("");
 
 	// Summary
@@ -62,7 +64,10 @@ export function generateMarkdown(context: OutputContext): string {
 			parts.push(`### File: \`${file.path}\``);
 			parts.push("");
 
-			const lang = file.language === "plaintext" || file.language === "unknown" ? "" : file.language;
+			const lang =
+				file.language === "plaintext" || file.language === "unknown"
+					? ""
+					: file.language;
 			parts.push(`\`\`\`${lang}`);
 			parts.push(file.content);
 			parts.push("```");
@@ -75,7 +80,9 @@ export function generateMarkdown(context: OutputContext): string {
 		parts.push(`## Git Information`);
 		parts.push("");
 		parts.push(`- **Branch:** ${context.gitBranch}`);
-		parts.push(`- **Status:** ${context.gitStatus === "dirty" ? "Dirty (uncommitted changes)" : "Clean"}`);
+		parts.push(
+			`- **Status:** ${context.gitStatus === "dirty" ? "Dirty (uncommitted changes)" : "Clean"}`,
+		);
 		parts.push("");
 	}
 
