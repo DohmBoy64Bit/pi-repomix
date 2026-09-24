@@ -90,7 +90,7 @@ export async function readFilesInParallel(
 		while (index < filePaths.length) {
 			const currentIndex = index++;
 			const filePath = filePaths[currentIndex] ?? "";
-			const absolutePath = path.join(rootDir, filePath);
+			const absolutePath = path.isAbsolute(filePath) ? filePath : path.join(rootDir, filePath);
 			results[currentIndex] = await readFileSafe(absolutePath, filePath);
 		}
 	}

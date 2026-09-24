@@ -49,9 +49,25 @@ export default function (pi: ExtensionAPI): void {
 			async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
 				const targetDir = params.directory || ctx.cwd;
 
-				const result = await executeRepomix(params, targetDir);
+				let result;
+				try {
+					result = await executeRepomix(params, targetDir);
+				} catch (error) {
+					const message = error instanceof Error ? error.message : String(error);
+					return {
+						content: [{ type: "text", text: `Error: ${message}` }],
+						details: { error: message },
+					};
+				}
 
 				// Build result message
+				if (result.totalFiles === 0) {
+					return {
+						content: [{ type: "text", text: `Warning: Repository packed but no files were found in ${targetDir}` }],
+						details: { totalFiles: 0 },
+					};
+				}
+
 				let content = `Repository packed successfully!\n\n`;
 				content += `Files: ${result.totalFiles}\n`;
 				content += `Tokens: ${result.totalTokens}\n`;

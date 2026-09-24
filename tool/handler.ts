@@ -38,14 +38,17 @@ export async function executeRepomix(
 ): Promise<RepomixResult> {
 	const warnings: string[] = [];
 
+	// Handle directory parameter - override cwd if specified
+	const targetDir = args.directory || cwd;
+
 	// 1. Load configuration
-	const config = await loadConfig(cwd, args);
+	const config = await loadConfig(targetDir, args);
 
 	// 2. Search for files
-	const searchResult = await searchFiles(cwd, config);
+	const searchResult = await searchFiles(targetDir, config);
 
 	if (searchResult.filePaths.length === 0) {
-		throw new Error(`No files found matching the specified criteria in ${cwd}`);
+		throw new Error(`No files found matching the specified criteria in ${targetDir}`);
 	}
 
 	// Add warnings for skipped files
@@ -54,7 +57,7 @@ export async function executeRepomix(
 	}
 
 	// 3. Read files
-	const rawFiles = await readFilesInParallel(searchResult.filePaths, cwd);
+	const rawFiles = await readFilesInParallel(searchResult.filePaths, targetDir);
 
 	// 4. Security scan
 	let suspiciousPaths: string[] = [];
