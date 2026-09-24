@@ -432,6 +432,53 @@ Uses `gpt-tokenizer` library. Falls back to rough estimate (`content.length / 4`
 
 ## Advanced Options
 
+### GitHub URL Cloning
+
+The `directory` parameter accepts GitHub repository URLs in addition to local directory paths. When a URL is provided, the repository is automatically cloned to a temporary directory.
+
+| Type | Default |
+|------|---------|
+| String | Current working directory |
+
+**Supported URL format:** `https://github.com/owner/repo`
+
+**Example (tool):**
+
+```json
+{
+  "directory": "https://github.com/owner/repo"
+}
+```
+
+**Example (CLI):**
+
+```
+/repomix https://github.com/owner/repo --compress
+```
+
+#### `cleanupRepo`
+
+Controls whether the cloned repository is removed after packing.
+
+| Type | Default |
+|------|---------|
+| Boolean | `true` |
+
+| Value | Behavior |
+|-------|----------|
+| `true` | Removes cloned repository on success |
+| `false` | Keeps cloned repository for inspection |
+| N/A | On failure: repository is always left behind for debugging |
+
+**CLI flags:**
+
+| Flag | Description |
+|------|-------------|
+| `--cleanup-repo` | Remove cloned repo on success (default) |
+| `--no-cleanup-repo` | Keep cloned repo after packing |
+
+**Note:** Only GitHub URLs are supported. Other Git hosting platforms are not recognized.
+
 ### Configuration File Support
 
 Load configuration from project config files (JSON5 format):

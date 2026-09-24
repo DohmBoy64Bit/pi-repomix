@@ -11,6 +11,7 @@ Complete guide to configuring Pi Repomix using config files and CLI options.
 - [Configuration Priority](#configuration-priority)
 - [Basic Configuration](#basic-configuration)
 - [Advanced Configuration](#advanced-configuration)
+- [GitHub URL Support](#github-url-support)
 - [Examples](#examples)
 
 ---
@@ -101,6 +102,7 @@ When using the tool programmatically (e.g., via MCP), pass overrides as a struct
 - `ignore` - Ignore configuration
 - `security` - Security scanning settings
 - `tokenCount` - Token counting configuration
+- `cleanupRepo` - GitHub URL cleanup control (boolean)
 
 Nested keys within these objects (e.g., `output.compress`, `output.style`) are properly merged and overridden.
 
@@ -295,6 +297,48 @@ Skips files larger than 10MB.
   }
 }
 ```
+
+---
+
+## GitHub URL Support
+
+Pi Repomix supports packing remote GitHub repositories directly. When the `directory` parameter is set to a GitHub URL, the repository is cloned automatically.
+
+### URL Format
+
+Only GitHub URLs are supported in the format:
+
+```
+https://github.com/owner/repo
+```
+
+### Cloning Behavior
+
+- Uses `git clone --depth 1` for a shallow clone (fast, minimal disk usage)
+- Clones to a temporary directory
+- The `cleanupRepo` parameter controls cleanup:
+
+```json
+{
+  "directory": "https://github.com/owner/repo",
+  "cleanupRepo": true
+}
+```
+
+| `cleanupRepo` value | Behavior |
+|---------------------|----------|
+| `true` (default) | Removes cloned repository on success |
+| `false` | Keeps cloned repository for inspection |
+
+**Note:** On failure, the cloned repository is always left behind for debugging, regardless of the `cleanupRepo` setting.
+
+### CLI Usage
+
+```
+/repomix https://github.com/owner/repo --compress --no-cleanup-repo
+```
+
+The `--cleanup-repo` (default) and `--no-cleanup-repo` flags control cleanup behavior.
 
 ---
 

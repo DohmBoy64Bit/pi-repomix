@@ -85,6 +85,32 @@ Run the `/repomix` command in the Pi TUI:
 /repomix ./my-project --compress --style markdown
 ```
 
+#### GitHub URL Support
+
+Both the tool and command accept GitHub repository URLs in addition to local directories:
+
+**Tool:**
+```json
+{
+  "directory": "https://github.com/owner/repo"
+}
+```
+
+**Command:**
+```
+/repomix https://github.com/owner/repo --compress
+```
+
+When a GitHub URL is provided:
+- The repository is cloned using `git clone --depth 1` to a temporary directory
+- The `cleanupRepo` parameter controls cleanup behavior:
+  - `true` (default): removes the cloned repository on success
+  - `false`: keeps the cloned repository for inspection
+  - On failure: the repository is always left behind for debugging (regardless of `cleanupRepo` setting)
+- Only GitHub URLs are supported (format: `https://github.com/owner/repo`)
+
+**CLI flag:** `--cleanup-repo` (default) / `--no-cleanup-repo`
+
 ### Basic Examples
 
 | Use Case | Command |
@@ -93,6 +119,8 @@ Run the `/repomix` command in the Pi TUI:
 | Pack with compression | `repomix({ directory: "./project", compress: true })` |
 | Markdown output | `repomix({ style: "markdown" })` |
 | Include git diffs | `repomix({ gitIncludeDiffs: true })` |
+| Pack remote GitHub repo | `repomix({ directory: "https://github.com/owner/repo" })` |
+| Keep cloned repo | `repomix({ directory: "https://github.com/owner/repo", cleanupRepo: false })` |
 
 ---
 
