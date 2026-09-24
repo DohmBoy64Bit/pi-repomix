@@ -1,5 +1,5 @@
 {
-  "name": "pi-repomix",
+  "name": "@dohmboy64bit/pi-repomix",
   "version": "1.0.0",
   "description": "Pack repository contents into a single AI-friendly file. Supports compression, security scanning, git integration, and multiple output formats.",
   "keywords": [
