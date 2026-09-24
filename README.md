@@ -195,7 +195,7 @@ By default, Repomix generates an output file with a dynamic name based on the re
 The repo name is resolved automatically using these sources (in order of priority):
 
 1. **`package.json`** name field (scoped packages like `@scope/name` become `scope-name`)
-2. **`.git/config`** remote URL (extracts `owner-repo` from `git@github.com:owner/repo.git`)
+2. **`.git/config`** remote URL (extracts `owner-repo` from SSH format `git@github.com:owner/repo.git` or HTTPS format `https://github.com/owner/repo.git`)
 3. **Directory name** as fallback
 
 You can also specify a custom output path:

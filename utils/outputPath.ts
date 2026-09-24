@@ -47,7 +47,7 @@ export function resolveOutputPath(targetDir: string): string {
 				"utf-8",
 			);
 			const remoteMatch = gitConfig.match(
-				/url\s*=\s*git@github\.com:([^/]+)\/([^/.]+)\.git/,
+				/url\s*=\s*(?:git@github\.com:|https?:\/\/github\.com\/)([^/]+)\/([^/.]+)\.git/,
 			);
 			if (remoteMatch?.[1] && remoteMatch[2]) {
 				repoName = `${slugify(remoteMatch[1])}-${slugify(remoteMatch[2])}`;
