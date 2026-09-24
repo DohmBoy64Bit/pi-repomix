@@ -71,7 +71,7 @@ describe("tool/handler", () => {
 			});
 
 			await expect(
-				toolHandler.executeRepomix({}, "/nonexistent"),
+				toolHandler.executeRepomix({}, "/nonexistent", "/nonexistent"),
 			).rejects.toThrow("No files found");
 		});
 
@@ -111,7 +111,11 @@ describe("tool/handler", () => {
 			vi.spyOn(security, "scanFilesForSecurity").mockReturnValue([]);
 			vi.spyOn(gitRepo, "getGitRoot").mockResolvedValue(null);
 
-			const result = await toolHandler.executeRepomix({}, "/test/dir");
+			const result = await toolHandler.executeRepomix(
+				{},
+				"/test/dir",
+				"/test/dir",
+			);
 
 			expect(result).toBeDefined();
 			expect(result).toHaveProperty("outputPath");
@@ -158,7 +162,11 @@ describe("tool/handler", () => {
 			vi.spyOn(security, "scanFilesForSecurity").mockReturnValue([]);
 			vi.spyOn(gitRepo, "getGitRoot").mockResolvedValue("/test/dir");
 
-			const result = await toolHandler.executeRepomix({}, "/test/dir");
+			const result = await toolHandler.executeRepomix(
+				{},
+				"/test/dir",
+				"/test/dir",
+			);
 
 			expect(result).toBeDefined();
 			expect(result.totalFiles).toBe(1);
@@ -205,7 +213,11 @@ describe("tool/handler", () => {
 			);
 			vi.spyOn(gitRepo, "getGitRoot").mockResolvedValue(null);
 
-			const result = await toolHandler.executeRepomix({}, "/test/dir");
+			const result = await toolHandler.executeRepomix(
+				{},
+				"/test/dir",
+				"/test/dir",
+			);
 
 			expect(result).toBeDefined();
 			expect(result.warnings.some((w: string) => w.includes("Security"))).toBe(
@@ -248,7 +260,11 @@ describe("tool/handler", () => {
 			vi.spyOn(security, "scanFilesForSecurity").mockReturnValue([]);
 			vi.spyOn(gitRepo, "getGitRoot").mockResolvedValue(null);
 
-			const result = await toolHandler.executeRepomix({}, "/test/dir");
+			const result = await toolHandler.executeRepomix(
+				{},
+				"/test/dir",
+				"/test/dir",
+			);
 
 			expect(result).toBeDefined();
 			expect(result.skippedFiles.length).toBe(2);

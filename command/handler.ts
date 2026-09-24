@@ -29,7 +29,9 @@ export async function handleRepomixCommand(
 	try {
 		const dirResult = await resolveDirectory(parsed.directory || cwd);
 
-		const result = await executeRepomix(parsed, dirResult.targetDir);
+		// Config always loads from the original directory, not the cloned temp dir
+		const configDir = dirResult.isCloned ? cwd : dirResult.targetDir;
+		const result = await executeRepomix(parsed, dirResult.targetDir, configDir);
 
 		// Display results
 		let message = `✅ Repomix completed successfully!\n`;

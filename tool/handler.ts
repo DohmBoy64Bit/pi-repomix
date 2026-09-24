@@ -35,15 +35,20 @@ export interface RepomixResult {
 
 /**
  * Execute the repomix tool.
+ *
+ * @param args - Tool parameters passed from the extension
+ * @param fileDir - Directory to scan and read files from (may be a cloned temp dir)
+ * @param configDir - Directory to load .repomix.json from (always the user's original dir)
  */
 export async function executeRepomix(
 	args: Record<string, any>,
-	cwd: string,
+	fileDir: string,
+	configDir: string,
 ): Promise<RepomixResult> {
 	const warnings: string[] = [];
 
 	// Handle directory parameter - override cwd if specified
-	const targetDir = args.directory || cwd;
+	const targetDir = args.directory || fileDir;
 
 	// Resolve default output path if not explicitly provided
 	let outputFile: string | undefined;
@@ -59,7 +64,8 @@ export async function executeRepomix(
 		...args,
 		output: { ...args.output, filePath: outputFile },
 	};
-	const config = await loadConfig(targetDir, configOverrides);
+	// Config always loads from configDir (user's original directory), not fileDir (cloned temp dir)
+	const config = await loadConfig(configDir, configOverrides);
 
 	// 2. Search for files
 	const searchResult = await searchFiles(targetDir, config);
@@ -106,7 +112,7 @@ export async function executeRepomix(
 		config.output.git.includeLogs ||
 		config.output.git.sortByChanges
 	) {
-		const gitRoot = await getGitRoot(cwd);
+		const gitRoot = await getGitRoot(fileDir);
 
 		if (gitRoot) {
 			if (config.output.git.includeDiffs) {
