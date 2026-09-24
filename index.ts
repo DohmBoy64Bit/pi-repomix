@@ -18,7 +18,7 @@
  * - Per-pattern compression overrides
  *
  * Usage:
- * 1. As a tool: Call the "repomix" tool with parameters
+ * 1. As a tool: Call the "pi-repomix" tool with parameters
  * 2. As a command: Run /repomix [options] in TUI mode
  */
 
@@ -31,7 +31,7 @@ export default function (pi: ExtensionAPI): void {
 	// Register the repomix tool
 	pi.registerTool(
 		defineTool({
-			name: "repomix",
+			name: "pi-repomix",
 			label: "Repomix",
 			description:
 				"Pack repository contents into a single AI-friendly file. " +
