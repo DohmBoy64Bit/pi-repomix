@@ -30,12 +30,34 @@ Pi Repomix is a powerful Pi agent extension that packs entire codebases into a s
 
 ### Installation
 
-The extension is automatically loaded when added to your Pi configuration. Add to `~/.pi/agent/settings.json`:
+**From npm (recommended):**
+
+```bash
+pi install npm:@dohmboy64bit/pi-repomix
+```
+
+Or add to Pi settings:
 
 ```json
 {
-  "extensions": [
-    "F:/Projects/Pi Extensions"
+  "packages": [
+    "npm:@dohmboy64bit/pi-repomix"
+  ]
+}
+```
+
+**From local development:**
+
+```bash
+pi install ./path/to/pi-repomix
+```
+
+Or add the local path to `settings.json`:
+
+```json
+{
+  "packages": [
+    "./path/to/pi-repomix"
   ]
 }
 ```
