@@ -1,106 +1,172 @@
 # Pi Repomix Extension
 
-A comprehensive Pi extension that replicates [Repomix](https://github.com/yamadashy/repomix)'s full functionality for packing repositories into AI-friendly single files.
+<div align="center">
 
-## Features
+**Pack repository contents into a single AI-friendly file for LLM consumption**
 
-- **4 Output Formats**: XML, Markdown, JSON, Plain text
-- **Config File Support**: `.repomix.json` or `repomix.config.json`
-- **Smart Ignoring**: `.gitignore`, `.repomixignore`, default patterns (node_modules, .git, dist, etc.)
-- **File Compression**: ~70% token reduction via signature extraction
-- **Code Processing**: Comment removal, empty line removal, line numbers, base64 truncation
-- **Git Integration**: Diffs, commit logs, sort by change frequency
-- **Security Scanning**: Detects API keys, tokens, passwords, private keys
-- **Token Counting**: Using gpt-tokenizer (o200k_base encoding)
-- **Output Splitting**: Split large outputs by size
-- **Per-Pattern Overrides**: Compress or list-only for specific file patterns
-- **Empty Directories**: Optional inclusion in directory tree
+[![TypeScript](https://img.shields.io/badge/TypeScript-Blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![Pi Extension](https://img.shields.io/badge/Pi_Extension-Orange?style=for-the-badge)](https://pi-docs.earendil.works/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 
-## Usage
+</div>
 
-### As a Tool
+---
 
-Call the `repomix` tool with parameters:
+## Overview
 
-```typescript
-// Pack the current directory as plain text
-repomix()
+Pi Repomix is a powerful Pi agent extension that packs entire codebases into a single, optimized file perfect for AI/LLM consumption. It intelligently compresses code, removes boilerplate, scans for security issues, and generates clean output in multiple formats.
 
-// Pack with compression and XML format
-repomix({
+### Why Repomix?
+
+- **70% token reduction** through intelligent code compression
+- **Security scanning** to exclude sensitive data
+- **Multiple output formats** (XML, Markdown, JSON, Plain text)
+- **Git integration** with diff and commit history
+- **Config-driven** with `.repomix.json` support
+
+---
+
+## Quick Start
+
+### Installation
+
+The extension is automatically loaded when added to your Pi configuration. Add to `~/.pi/agent/settings.json`:
+
+```json
+{
+  "extensions": [
+    "F:/Projects/Pi Extensions"
+  ]
+}
+```
+
+### Usage
+
+#### As a Tool
+
+Call the `repomix` tool with your desired parameters:
+
+```
+repomix(
+  directory: "path/to/project",
   style: "xml",
   compress: true,
-  output: "repomix-output.xml"
-})
-
-// Pack with git integration
-repomix({
-  style: "markdown",
-  gitIncludeDiffs: true,
-  gitIncludeLogs: true,
-  gitIncludeLogsCount: 20
-})
+  fileSummary: true
+)
 ```
 
-### As a Command
+#### As a Command
 
-In TUI mode, run:
+Run the `/repomix` command in the Pi TUI:
 
 ```
-/repomix
-/repomix --style xml --compress
-/repomix src --ignore "**/*.test.ts" --output packed.txt
-/repomix --git-include-diffs --git-include-logs
+/repomix ./my-project --compress --style markdown
 ```
 
-### CLI-like Arguments
+### Basic Examples
 
-The command supports Repomix-style flags:
+| Use Case | Command |
+|----------|---------|
+| Pack current directory | `repomix()` |
+| Pack with compression | `repomix({ directory: "./project", compress: true })` |
+| Markdown output | `repomix({ style: "markdown" })` |
+| Include git diffs | `repomix({ git: { includeDiffs: true } })` |
 
-| Flag | Description |
-|------|-------------|
-| `[directory]` | Target directory (default: cwd) |
-| `--style xml\|markdown\|json\|plain` | Output format |
-| `--output path` | Output file path |
-| `--compress` | Enable compression |
-| `--remove-comments` | Strip code comments |
-| `--remove-empty-lines` | Remove empty lines |
-| `--show-line-numbers` | Add line numbers |
-| `--include pattern` | Include glob pattern (comma-separated) |
-| `--ignore pattern` | Ignore glob pattern (comma-separated) |
-| `--git-include-diffs` | Include git diffs |
-| `--git-include-logs` | Include git commit logs |
-| `--git-include-logs-count N` | Number of logs (default: 50) |
-| `--git-sort-by-changes` | Sort by git change frequency |
-| `--header-text text` | Custom header text |
-| `--split-output N` | Split output by N bytes |
-| `--max-file-size N` | Max file size in bytes |
-| `--no-security-check` | Disable security scanning |
-| `--include-empty-directories` | Include empty dirs in tree |
-| `--no-file-summary` | Omit file summary |
-| `--no-directory-structure` | Omit directory tree |
+---
+
+## Key Features
+
+### 🗜️ Intelligent Compression
+
+Reduce output by ~70% while preserving code structure and signatures.
+
+```json
+{
+  "compress": true
+}
+```
+
+**Supported languages:** TypeScript, JavaScript, Python, Ruby, Go, Rust, Java, C/C++, PHP, Swift, Kotlin, and 10+ more.
+
+### 🔒 Security Scanning
+
+Automatically detects and flags sensitive data:
+
+- API keys and tokens (GitHub, GitLab, Slack, AWS, etc.)
+- Passwords and connection strings
+- Private keys and JWT tokens
+- Database credentials
+
+```json
+{
+  "security": {
+    "enableSecurityCheck": true
+  }
+}
+```
+
+### 📊 Rich Output
+
+Generate comprehensive output with:
+
+- **File summary** with token/line counts
+- **Directory tree** with emojis
+- **Custom headers** and instructions
+- **Line numbers** (optional)
+
+```json
+{
+  "fileSummary": true,
+  "directoryStructure": true,
+  "showLineNumbers": false
+}
+```
+
+### 📈 Git Integration
+
+Leverage git history for smarter output:
+
+- **Include diffs** of uncommitted changes
+- **Commit logs** with file changes
+- **Sort by change frequency** to highlight active files
+
+```json
+{
+  "git": {
+    "includeDiffs": true,
+    "includeLogs": true,
+    "sortByChanges": true
+  }
+}
+```
+
+### 🎨 Multiple Output Formats
+
+Choose the format that best fits your workflow:
+
+- **`plain`** - Simple text with headers
+- **`xml`** - Structured XML format
+- **`markdown`** - Markdown document
+- **`json`** - Parseable JSON
+
+---
 
 ## Configuration
 
-Create a `.repomix.json` file in your project root:
+### Config File
+
+Create `.repomix.json` in your project root:
 
 ```json
 {
   "output": {
-    "filePath": "repomix-output.xml",
     "style": "xml",
     "compress": true,
-    "removeComments": false,
-    "showLineNumbers": false,
-    "headerText": "My Project - Packed for AI",
-    "git": {
-      "includeDiffs": true,
-      "includeLogs": true,
-      "includeLogsCount": 20
-    }
+    "fileSummary": true
   },
   "ignore": {
-    "customPatterns": ["**/*.test.ts", "docs/**"]
+    "useGitignore": true,
+    "customPatterns": ["**/*.log"]
   },
   "security": {
     "enableSecurityCheck": true
@@ -108,73 +174,127 @@ Create a `.repomix.json` file in your project root:
 }
 ```
 
-## File Structure
-
-```
-./
-├── index.ts              # Extension entry point
-├── package.json          # Dependencies
-├── config/
-│   ├── schema.ts         # TypeBox schema definitions
-│   ├── types.ts          # TypeScript interfaces
-│   ├── defaults.ts       # Default values & patterns
-│   ├── loader.ts         # Config file loading
-│   └── merge.ts          # Config merging
-├── scan/
-│   ├── types.ts          # Scan types
-│   ├── fileSearch.ts     # Recursive directory scanning
-│   ├── ignorePatterns.ts # .gitignore/.repomixignore handling
-│   ├── fileRead.ts       # Safe file reading + binary detection
-│   └── fileTree.ts       # ASCII tree generation
-├── process/
-│   ├── pipeline.ts       # Main processing pipeline
-│   ├── compression.ts    # Signature extraction (~70% reduction)
-│   ├── commentRemoval.ts # Language-aware comment stripping
-│   ├── emptyLines.ts     # Empty line removal
-│   ├── lineNumbers.ts    # Line number prefixing
-│   └── base64Truncate.ts # Base64 content truncation
-├── output/
-│   ├── generator.ts      # Output orchestration
-│   └── styles/
-│       ├── xmlStyle.ts   # XML format
-│       ├── markdownStyle.ts # Markdown format
-│       ├── jsonStyle.ts  # JSON format
-│       └── plainStyle.ts # Plain text format
-├── git/
-│   ├── repository.ts     # Git detection
-│   ├── diff.ts           # Git diff extraction
-│   ├── log.ts            # Git commit logs
-│   └── sort.ts           # Sort by change frequency
-├── security/
-│   └── scanner.ts        # Sensitive data detection
-├── metrics/
-│   └── tokenCounter.ts   # Token counting
-├── tool/
-│   ├── parameters.ts     # Tool parameter schema
-│   └── handler.ts        # Tool execution
-└── command/
-    ├── args.ts           # Argument parsing
-    ├── handler.ts        # Command handler
-    └── types.ts          # Command types
-```
-
-## Dependencies
-
-| Package | Purpose |
-|---------|---------|
-| `minimatch` | Glob pattern matching |
-| `gpt-tokenizer` | Token counting |
-| `json5` | Config file parsing (with comments) |
-| `@repomix/strip-comments` | Language-aware comment removal |
-| `isbinaryfile` | Binary file detection |
-
-## Installation
-
-1. Copy this directory to `~/.pi/agent/extensions/pi-repomix/` or your project's `.pi/extensions/`
-2. Start Pi — the extension auto-discovers and loads
-
-Or load directly during development:
+### CLI Options
 
 ```bash
-pi --extension ./index.ts
+/repomix ./project \
+  --style xml \
+  --compress \
+  --remove-comments \
+  --git-include-diffs \
+  --output repomix-output.xml
 ```
+
+---
+
+## Output Structure
+
+The generated output includes:
+
+1. **Header** - Repository info and generation timestamp
+2. **Summary** - File count, token count, line count, top files
+3. **Directory Tree** - Visual tree structure
+4. **File Contents** - Compressed/processed file code
+5. **Security Report** - Flagged files (if any)
+
+---
+
+## Advanced Features
+
+### Per-Pattern Compression
+
+Fine-tune compression per file pattern:
+
+```json
+{
+  "patterns": [
+    {
+      "pattern": "**/*.ts",
+      "compress": true
+    },
+    {
+      "pattern": "**/config/*.json",
+      "compress": false
+    }
+  ]
+}
+```
+
+### Output Splitting
+
+Split large outputs into manageable chunks:
+
+```json
+{
+  "splitOutput": 50000000
+}
+```
+
+Creates `repomix-output-1.txt`, `repomix-output-2.txt`, etc.
+
+### Custom Instructions
+
+Add custom instructions from a file:
+
+```json
+{
+  "instructionFilePath": "./docs/repomix-instructions.md"
+}
+```
+
+---
+
+## Documentation
+
+- **[Features](docs/features.md)** - Complete feature reference with all parameters
+- **[Configuration](docs/configuration.md)** - Config file format and options
+- **[Git Integration](docs/git-integration.md)** - Git features and options
+- **[Security](docs/security.md)** - Security scanning patterns and configuration
+
+---
+
+## Development
+
+### Project Structure
+
+```
+Pi Extensions/
+├── index.ts              # Extension entry point
+├── tool/                 # Tool handler and parameters
+├── config/               # Configuration loading and merging
+├── scan/                 # File scanning and reading
+├── process/              # File processing and compression
+├── output/               # Output generation
+├── security/             # Security scanning
+├── git/                  # Git integration
+├── command/              # CLI command handler
+└── test/                 # Test suites
+```
+
+### Running Tests
+
+```bash
+npm test
+```
+
+### Building
+
+```bash
+npm run build
+```
+
+---
+
+## License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+---
+
+<div align="center">
+
+**Built with ❤️ for the Pi agent ecosystem**
+
+[Report Issue](https://github.com/yourusername/pi-repomix/issues) • [Request Feature](https://github.com/yourusername/pi-repomix/issues)
+
+</div>
