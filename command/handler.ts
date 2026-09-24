@@ -12,6 +12,11 @@ import { executeRepomix } from "../tool/handler.js";
  * Handle the /repomix command.
  */
 export async function handleRepomixCommand(args: string, ctx: ExtensionCommandContext): Promise<void> {
+	if (ctx.mode !== "tui") {
+		ctx.ui.notify("The /repomix command requires interactive mode (TUI).", "error");
+		return;
+	}
+
 	const parsed = parseArgs(args);
 	const cwd = ctx.cwd;
 

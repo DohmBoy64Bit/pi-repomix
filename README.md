@@ -174,9 +174,7 @@ You can also specify a custom output path:
 
 ```json
 {
-  "output": {
-    "filePath": "custom-output.xml"
-  }
+  "output": "custom-output.xml"
 }
 ```
 
@@ -199,18 +197,11 @@ Create `.repomix.json` in your project root:
 
 ```json
 {
-  "output": {
-    "style": "xml",
-    "compress": true,
-    "fileSummary": true
-  },
-  "ignore": {
-    "useGitignore": true,
-    "customPatterns": ["**/*.log"]
-  },
-  "security": {
-    "enableSecurityCheck": true
-  }
+  "style": "xml",
+  "compress": true,
+  "fileSummary": true,
+  "ignore": ["**/*.log"],
+  "securityCheck": true
 }
 ```
 

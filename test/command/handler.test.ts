@@ -14,6 +14,7 @@ import { executeRepomix } from "../../tool/handler.js";
 
 describe("command/handler", () => {
 	const mockCtx = {
+		mode: "tui" as const,
 		ui: {
 			notify: vi.fn(),
 		},

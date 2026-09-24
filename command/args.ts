@@ -31,7 +31,9 @@ export function parseArgs(args: string): PartialRepomixArgs {
 		// --output / -o
 		if (token === "--output" || token === "-o") {
 			i++;
-			result.output = tokens[i] ?? "";
+			if (tokens[i]) {
+				result.output = tokens[i];
+			}
 			continue;
 		}
 
@@ -104,7 +106,9 @@ export function parseArgs(args: string): PartialRepomixArgs {
 		// --header-text
 		if (token === "--header-text") {
 			i++;
-			result.headerText = tokens[i];
+			if (tokens[i]) {
+				result.headerText = tokens[i];
+			}
 			continue;
 		}
 

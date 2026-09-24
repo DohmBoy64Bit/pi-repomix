@@ -44,6 +44,10 @@ export default function (pi: ExtensionAPI): void {
 				"Use repomix when the user wants to analyze or feed their codebase to an LLM.",
 				"Use compress=true for large repos to reduce token count by ~70%.",
 				"Set gitIncludeDiffs=true when the user has uncommitted changes.",
+				"Default to style='xml' for structured, parsable output unless the user specifies another format.",
+				"Set splitOutput when the repository has more than 100 files or is particularly large.",
+				"Keep fileSummary=true and directoryStructure=true by default — the user almost always wants these.",
+				"Keep securityCheck=true by default — always scan for sensitive data unless explicitly disabled.",
 			],
 			parameters: RepomixToolParameters,
 			async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
@@ -54,10 +58,7 @@ export default function (pi: ExtensionAPI): void {
 					result = await executeRepomix(params, targetDir);
 				} catch (error) {
 					const message = error instanceof Error ? error.message : String(error);
-					return {
-						content: [{ type: "text", text: `Error: ${message}` }],
-						details: { error: message },
-					};
+					throw new Error(`Repomix failed: ${message}`);
 				}
 
 				// Build result message

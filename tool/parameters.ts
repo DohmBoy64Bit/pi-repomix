@@ -35,13 +35,13 @@ export const RepomixToolParameters = Type.Object({
 	// File selection
 	include: Type.Optional(
 		Type.Array(Type.String(), {
-			description: "Glob patterns for files to include (comma-separated). Empty means all files.",
+			description: "Glob patterns for files to include. Use an array of patterns. Empty array includes all files.",
 		}),
 	),
 
 	ignore: Type.Optional(
 		Type.Array(Type.String(), {
-			description: "Additional glob patterns to exclude (comma-separated).",
+			description: "Additional glob patterns to exclude. Use an array of patterns.",
 		}),
 	),
 
@@ -65,7 +65,7 @@ export const RepomixToolParameters = Type.Object({
 	),
 
 	truncateBase64: Type.Optional(
-		Type.Boolean({ description: "Truncate base64-encoded content. Default: false." }),
+		Type.Boolean({ description: "Truncate long base64-encoded images/data to save tokens. Default: false." }),
 	),
 
 	// Output structure
@@ -148,7 +148,7 @@ export const RepomixToolParameters = Type.Object({
 					}),
 				),
 			],
-			{ description: "Per-glob compression overrides. Evaluated in order, first match wins." },
+			{ description: "Per-glob compression overrides. Each item has: pattern (glob), optional compress (boolean), optional directoryStructureOnly (boolean). Evaluated in order, first match wins." },
 		),
 		true,
 	),
