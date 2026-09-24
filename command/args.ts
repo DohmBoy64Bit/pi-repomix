@@ -240,6 +240,11 @@ export function parseArgs(args: string): PartialRepomixArgs {
 			i++;
 			result.instructionFilePath = tokens[i];
 		}
+
+		// --cleanup-repo / --no-cleanup-repo
+		if (token === "--cleanup-repo" || token === "--no-cleanup-repo") {
+			result.cleanupRepo = token === "--cleanup-repo";
+		}
 	}
 
 	return result;

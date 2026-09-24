@@ -5,6 +5,7 @@
 
 import type { ExtensionCommandContext } from "@earendil-works/pi-coding-agent";
 import { executeRepomix } from "../tool/handler.js";
+import { cleanupClone, resolveDirectory } from "../utils/gitClone.js";
 import { parseArgs } from "./args.js";
 
 /**
@@ -26,7 +27,9 @@ export async function handleRepomixCommand(
 	const cwd = ctx.cwd;
 
 	try {
-		const result = await executeRepomix(parsed, cwd);
+		const dirResult = await resolveDirectory(parsed.directory || cwd);
+
+		const result = await executeRepomix(parsed, dirResult.targetDir);
 
 		// Display results
 		let message = `✅ Repomix completed successfully!\n`;
@@ -54,6 +57,11 @@ export async function handleRepomixCommand(
 		}
 
 		ctx.ui.notify(message, "info");
+
+		// Cleanup cloned repo on success (default: true)
+		if (parsed.cleanupRepo !== false) {
+			await cleanupClone(dirResult);
+		}
 	} catch (err) {
 		const message = err instanceof Error ? err.message : "Repomix failed";
 		ctx.ui.notify(`❌ ${message}`, "error");
