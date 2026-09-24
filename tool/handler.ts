@@ -55,7 +55,7 @@ export async function executeRepomix(
 	if (args.output) {
 		outputFile = args.output;
 	} else {
-		outputFile = resolveOutputPath(targetDir);
+		outputFile = resolveOutputPath(configDir);
 	}
 
 	// 1. Load configuration
