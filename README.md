@@ -103,6 +103,7 @@ Both the tool and command accept GitHub repository URLs in addition to local dir
 
 When a GitHub URL is provided:
 - The repository is cloned using `git clone --depth 1` to a temporary directory
+- Configuration (`.repomix.json`) is loaded from your **local directory** (not the cloned repo), so you can use your project's config for remote repos
 - The `cleanupRepo` parameter controls cleanup behavior:
   - `true` (default): removes the cloned repository on success
   - `false`: keeps the cloned repository for inspection

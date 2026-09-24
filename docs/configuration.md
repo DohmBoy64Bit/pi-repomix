@@ -18,7 +18,7 @@ Complete guide to configuring Pi Repomix using config files and CLI options.
 
 ## Config File Locations
 
-Pi Repomix looks for config files in the target directory, checking in this order:
+Pi Repomix looks for config files in the user's original directory, checking in this order:
 
 1. `.repomix.json`
 2. `repomix.config.json`
@@ -26,6 +26,8 @@ Pi Repomix looks for config files in the target directory, checking in this orde
 4. `repomix.config.js`
 
 The first found config file is used.
+
+**Note:** When using a GitHub URL, config is loaded from your **local directory** (not the cloned temp directory). This lets you use your project's config file for remote repositories.
 
 ---
 
@@ -339,6 +341,14 @@ https://github.com/owner/repo
 ```
 
 The `--cleanup-repo` (default) and `--no-cleanup-repo` flags control cleanup behavior.
+
+### Config Behavior
+
+When packing a remote GitHub repository, configuration is loaded from your **local directory** (where you run the command), not from the cloned temporary directory. This means:
+
+- Your local `.repomix.json` applies to the remote repo
+- Pass tool/CLI parameters to override config for specific remote repos
+- Use `output.filePath` to specify where to save the output (since the temp dir is cleaned up)
 
 ---
 

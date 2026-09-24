@@ -490,6 +490,8 @@ Load configuration from project config files (JSON5 format):
 
 **Priority:** defaults < config file < CLI overrides
 
+**Note:** When using a GitHub URL, config is loaded from your **local directory** (not the cloned temp directory), so your project's config applies to remote repos.
+
 ### CLI Command
 
 ```bash
