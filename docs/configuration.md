@@ -85,10 +85,24 @@ Configuration is merged from multiple sources with this priority (highest to low
 }
 ```
 
-```bash
-# CLI override takes precedence
-/repomix ./project --compress
+When using the tool programmatically (e.g., via MCP), pass overrides as a structured object:
+
+```javascript
+// Tool call with overrides - these override the config file
+{
+  output: { compress: true }
+}
 ```
+
+**Important:** When using a config file, only the following top-level keys are supported for CLI/tool overrides:
+- `input` - Input configuration (e.g., `maxFileSize`)
+- `output` - Output configuration (e.g., `style`, `compress`, `filePath`)
+- `include` - File inclusion patterns (array)
+- `ignore` - Ignore configuration
+- `security` - Security scanning settings
+- `tokenCount` - Token counting configuration
+
+Nested keys within these objects (e.g., `output.compress`, `output.style`) are properly merged and overridden.
 
 ---
 
@@ -389,37 +403,46 @@ Skips files larger than 10MB.
 
 ---
 
-## TypeScript Config Files
+## TypeScript/JavaScript Config Files
 
-For `repomix.config.ts`, export a config object:
+**Note:** TypeScript (`.ts`) and JavaScript (`.js`) config files are parsed as JSON5, not evaluated as executable code. This means:
 
-```typescript
-import { defineConfig } from '@earendil-works/pi-repomix';
+- You **cannot** use imports, function calls, or any JavaScript/TypeScript syntax
+- You **cannot** use `defineConfig` or any other helper function
+- The file is parsed identically to `.repomix.json`
 
-export default defineConfig({
-  output: {
-    style: 'xml',
-    compress: true,
-  },
-  ignore: {
-    customPatterns: ['**/*.log'],
-  },
-});
-```
+**Recommendation:** Use `.repomix.json` or `repomix.config.json` for your config file. These are the fully supported formats.
+
+If you need dynamic configuration, consider using a build script to generate the JSON config file before running repomix.
 
 ---
 
 ## CLI Overrides
 
-CLI options override config file settings:
+When calling the tool programmatically, you can override config file settings by passing a structured object. Only the top-level keys listed in [Configuration Priority](#configuration-priority) are supported:
 
-```bash
-# Config file has compress: false, but CLI overrides to true
-/repomix ./project --compress
+```javascript
+// Override output style and compression
+{
+  output: { style: 'markdown', compress: true },
+  include: ['src/**/*.ts', 'README.md']
+}
 ```
+
+**What works:**
+- `output.*` - All output settings (`style`, `compress`, `filePath`, `fileSummary`, `directoryStructure`, etc.)
+- `input.*` - Input settings (`maxFileSize`)
+- `include` - File inclusion patterns (replaces config file patterns)
+- `ignore.*` - Ignore settings
+- `security.*` - Security settings
+- `tokenCount.*` - Token encoding settings
+
+**What does NOT work:**
+- Flat keys like `compress`, `style`, `filePath` at the top level are silently ignored
+- These must be nested under their proper parent (`output.style`, `output.compress`, etc.)
 
 **Priority order (highest to lowest):**
 
-1. CLI parameters
+1. Tool parameters (structured object)
 2. Config file
 3. Defaults

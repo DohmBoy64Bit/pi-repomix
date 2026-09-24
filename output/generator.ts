@@ -18,6 +18,8 @@ export interface OutputContext {
 	gitDiff?: string;
 	gitDiffStaged?: string;
 	gitLogs?: GitLogCommit[];
+	gitBranch?: string;
+	gitStatus?: "clean" | "dirty";
 	instruction?: string;
 	generationDate: string;
 	fileSummary: boolean;

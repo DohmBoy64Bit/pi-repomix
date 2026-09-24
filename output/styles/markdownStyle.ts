@@ -70,6 +70,15 @@ export function generateMarkdown(context: OutputContext): string {
 		}
 	}
 
+	// Git info (branch and status)
+	if (context.gitBranch) {
+		parts.push(`## Git Information`);
+		parts.push("");
+		parts.push(`- **Branch:** ${context.gitBranch}`);
+		parts.push(`- **Status:** ${context.gitStatus === "dirty" ? "Dirty (uncommitted changes)" : "Clean"}`);
+		parts.push("");
+	}
+
 	// Git diffs
 	if (context.gitDiff) {
 		parts.push(`## Git Diff (Working Tree)`);

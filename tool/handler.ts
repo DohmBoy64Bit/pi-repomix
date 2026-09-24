@@ -15,7 +15,7 @@ import { scanFilesForSecurity, generateSecurityReport } from "../security/scanne
 import { getGitDiff } from "../git/diff.js";
 import { getCommitLogsWithFiles } from "../git/log.js";
 import { sortByGitChanges } from "../git/sort.js";
-import { isGitRepository, getGitRoot } from "../git/repository.js";
+import { isGitRepository, getGitRoot, getGitStatus } from "../git/repository.js";
 
 export interface RepomixResult {
 	outputPath: string;
@@ -75,6 +75,8 @@ export async function executeRepomix(
 	let gitDiffStaged: string | undefined;
 	let gitLogs: Awaited<ReturnType<typeof getCommitLogsWithFiles>> = [];
 	let sortedPaths: string[] | undefined;
+	let gitBranch: string | undefined;
+	let gitStatusLabel: "clean" | "dirty" | undefined;
 
 	if (config.output.git.includeDiffs || config.output.git.includeLogs || config.output.git.sortByChanges) {
 		const gitRoot = await getGitRoot(cwd);
@@ -93,6 +95,11 @@ export async function executeRepomix(
 			if (config.output.git.sortByChanges) {
 				sortedPaths = await sortByGitChanges(searchResult.filePaths, gitRoot, config.output.git.sortByChangesMaxCommits);
 			}
+
+			// Get branch name and clean/dirty status
+			const gitStatus = getGitStatus(gitRoot);
+			gitBranch = gitStatus.branch;
+			gitStatusLabel = gitStatus.isClean ? "clean" : "dirty";
 		} else {
 			if (config.output.git.sortByChanges || config.output.git.includeDiffs || config.output.git.includeLogs) {
 				warnings.push("Git integration requested but no git repository found.");
@@ -124,6 +131,8 @@ export async function executeRepomix(
 		gitDiff,
 		gitDiffStaged,
 		gitLogs,
+		gitBranch,
+		gitStatus: gitStatusLabel,
 		skippedFiles: searchResult.skippedFiles.map((s) => ({ path: s.path, reason: s.reason, details: s.details })),
 	});
 

@@ -92,7 +92,7 @@ Run the `/repomix` command in the Pi TUI:
 | Pack current directory | `repomix()` |
 | Pack with compression | `repomix({ directory: "./project", compress: true })` |
 | Markdown output | `repomix({ style: "markdown" })` |
-| Include git diffs | `repomix({ git: { includeDiffs: true } })` |
+| Include git diffs | `repomix({ gitIncludeDiffs: true })` |
 
 ---
 
@@ -121,9 +121,7 @@ Automatically detects and flags sensitive data:
 
 ```json
 {
-  "security": {
-    "enableSecurityCheck": true
-  }
+  "securityCheck": true
 }
 ```
 
@@ -154,11 +152,9 @@ Leverage git history for smarter output:
 
 ```json
 {
-  "git": {
-    "includeDiffs": true,
-    "includeLogs": true,
-    "sortByChanges": true
-  }
+  "gitIncludeDiffs": true,
+  "gitIncludeLogs": true,
+  "gitSortByChanges": true
 }
 ```
 

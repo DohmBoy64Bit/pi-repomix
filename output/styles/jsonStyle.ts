@@ -51,6 +51,14 @@ export function generateJson(context: OutputContext): string {
 		output.files = files;
 	}
 
+	// Git info (branch and status)
+	if (context.gitBranch) {
+		output.gitInfo = {
+			branch: context.gitBranch,
+			status: context.gitStatus === "dirty" ? "dirty" : "clean",
+		};
+	}
+
 	// Git diffs
 	if (context.gitDiff) {
 		output.gitDiff = context.gitDiff;

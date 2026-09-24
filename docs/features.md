@@ -150,16 +150,22 @@ Enable smart code compression (~70% token reduction).
 | Language | Preserved Elements |
 |----------|-------------------|
 | TypeScript/JSX | Functions, classes, interfaces, types, enums, typed variables |
+| JavaScript/JSX | Functions, classes, interfaces, types, enums, typed variables |
 | Python | `def`/`async def`, class definitions, imports |
 | Ruby | `def`/`def self`, class/module, require |
 | Go | `func`, `type struct/interface`, imports |
 | Rust | `fn`, `impl`, `struct`/`enum`, `use` |
-| Java/C/C#/C++ | Functions, classes, interfaces, import/package |
+| Java/C/C++ | Functions, classes, interfaces, import/package |
 | PHP | Functions, classes, namespace/use |
 | Swift | `func`, `struct`/`class`/`enum` |
 | Kotlin | `fun`, `class`/`data class`/`interface`/`object` |
+| Scala | `def`/`val`/`var`, class/object/trait, imports |
+| Haskell | `data`, `newtype`, `type`, `instance`, `module` |
+| Elixir | `def`/`defp`, `defmodule`, `use` |
 | Shell/PowerShell | `func()` syntax, `function` keyword, shebang |
 | SQL | `CREATE TABLE/VIEW/PROCEDURE/FUNCTION` |
+| HTML | Structure and tags |
+| CSS | Selectors, properties, keyframes |
 
 ### `removeComments`
 
@@ -240,11 +246,13 @@ Per-pattern compression overrides.
 
 ### `fileSummary`
 
-Include summary section with file count, token count, line count, and top N largest files.
+Include summary section with directory structure and top N largest files.
 
 | Type | Default |
 |------|---------|
 | Boolean | `true` |
+
+**Note:** The `topFilesLength` property (default `5`) controls how many of the largest files are listed.
 
 ### `directoryStructure`
 
@@ -307,8 +315,9 @@ Scan files for sensitive data patterns.
 | Pattern Type | Regex | Severity |
 |--------------|-------|----------|
 | AWS Access Key | `AKIA[0-9A-Z]{16}` | high |
-| API Key | `api[_-]?key\s*[:=]\s*["'][^"']{16,}["']` | high |
-| API Secret | `api[_-]?secret\s*[:=]\s*["'][^"']{8,}["']` | high |
+| AWS Access Key (quoted) | `["'](?:AKIA|ABIA|ACCA)[0-9A-Z]{16}["']` | high |
+| API Key | `(?:api[_-]?key|apikey)\s*[:=]\s*["'][^"']{16,}["']` | high |
+| API Secret | `(?:api[_-]?secret|apisecret)\s*[:=]\s*["'][^"']{8,}["']` | high |
 | GitHub PAT | `ghp_[0-9a-zA-Z]{36}` | high |
 | GitHub OAuth | `gho_[0-9a-zA-Z]{36}` | high |
 | GitHub User Token | `ghu_[0-9a-zA-Z]{36}` | high |
@@ -319,12 +328,12 @@ Scan files for sensitive data patterns.
 | Google API Key | `AIza[0-9A-Za-z_-]{35}` | high |
 | JWT Token | `eyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}` | high |
 | Private Key | `-----BEGIN\s+(RSA\s+)?PRIVATE KEY-----` | high |
-| Password | `(password|passwd|pwd)\s*[:=]\s*["'][^"']{4,}["']` | high |
-| Database Password | `(DB_PASSWORD|DATABASE_PASSWORD|MYSQL_PASSWORD)\s*[:=]\s*["'][^"']+` | high |
-| Connection String | `(mongodb|postgres|mysql|redis|amqp)://[^"'\s]+:[^"'\s]+@` | high |
+| Password | `(?:password|passwd|pwd)\s*[:=]\s*["'][^"']{4,}["']` | high |
+| Database Password | `(?:DB_PASSWORD|DATABASE_PASSWORD|MYSQL_PASSWORD)\s*[:=]\s*["'][^"']+` | high |
+| Connection String | `(?:mongodb|postgres|mysql|redis|amqp)://[^"'\s]+:[^"'\s]+@` | high |
 | NPM Token | `npm_[A-Za-z0-9]{36}` | high |
-| Azure Secret | `azure[_-]?secret\s*[:=]\s*["'][^"']{8,}["']` | high |
-| Heroku API Key | `heroku:[0-9a-f]{8}-...` | high |
+| Azure Secret | `(?:azure[_-]?secret|azure[_-]?key)\s*[:=]\s*["'][^"']{8,}["']` | high |
+| Heroku API Key | `heroku:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}` | high |
 | Potential Secret | `(SECRET|TOKEN|KEY|PASSWORD)\s*=\s*\S{8,}` | medium |
 | Base64 Basic Auth | `Basic\s+[A-Za-z0-9+/]{20,}={0,2}` | medium |
 | Potential Secret Key | `["'](sk|secret|token|key)[_-][a-zA-Z0-9]{20,}["']` | low |
@@ -454,6 +463,7 @@ Load configuration from project config files (JSON5 format):
 | `--remove-comments` | Remove comments |
 | `--remove-empty-lines` | Remove empty lines |
 | `--show-line-numbers` | Add line numbers |
+| `--output-show-line-numbers` | Alias for `--show-line-numbers` |
 | `--truncate-base64` | Truncate base64 content |
 | `--header-text` | Custom header text |
 | `--file-summary / --no-file-summary` | Toggle file summary |

@@ -144,6 +144,19 @@ export function parseArgs(args: string): PartialRepomixArgs {
 			continue;
 		}
 
+		// --git-sort-by-changes-max-commits
+		if (token === "--git-sort-by-changes-max-commits") {
+			i++;
+			const value = tokens[i];
+			if (value) {
+				const parsed = parseInt(value, 10);
+				if (!isNaN(parsed)) {
+					result.gitSortByChangesMaxCommits = parsed;
+				}
+			}
+			continue;
+		}
+
 		// --git-include-diffs
 		if (token === "--git-include-diffs") {
 			result.gitIncludeDiffs = true;

@@ -76,6 +76,15 @@ export function generateXml(context: OutputContext): string {
 		parts.push("");
 	}
 
+	// Git info (branch and status)
+	if (context.gitBranch) {
+		parts.push("  <git_info>");
+		parts.push(`    <branch>${escapeXml(context.gitBranch)}</branch>`);
+		parts.push(`    <status>${context.gitStatus === "dirty" ? "dirty" : "clean"}</status>`);
+		parts.push("  </git_info>");
+		parts.push("");
+	}
+
 	// Git diffs
 	if (context.gitDiff) {
 		parts.push("  <git_diffs>");

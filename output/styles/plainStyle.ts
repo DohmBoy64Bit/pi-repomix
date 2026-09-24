@@ -83,6 +83,17 @@ export function generatePlain(context: OutputContext): string {
 		}
 	}
 
+	// Git info (branch and status)
+	if (context.gitBranch) {
+		parts.push(SECTION_SEPARATOR);
+		parts.push("GIT INFORMATION");
+		parts.push(SECTION_SEPARATOR);
+		parts.push("");
+		parts.push(`Branch: ${context.gitBranch}`);
+		parts.push(`Status: ${context.gitStatus === "dirty" ? "Dirty (uncommitted changes)" : "Clean"}`);
+		parts.push("");
+	}
+
 	// Git diffs
 	if (context.gitDiff) {
 		parts.push(SECTION_SEPARATOR);

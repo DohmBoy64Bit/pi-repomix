@@ -38,7 +38,7 @@ Pi Repomix includes built-in security scanning to detect sensitive data patterns
 ### Scanning Process
 
 - Runs on all files before packing
-- One finding per pattern per line
+- One finding per line (first matching pattern wins)
 - Preserves original file paths
 - Does not modify source files
 
@@ -46,13 +46,16 @@ Pi Repomix includes built-in security scanning to detect sensitive data patterns
 
 ## Detected Patterns
 
+The scanner detects **22 security patterns** across three severity levels.
+
 ### High Severity
 
 | Pattern | Regex | Example |
 |---------|-------|---------|
 | AWS Access Key | `AKIA[0-9A-Z]{16}` | `AKIAIOSFODNN7EXAMPLE` |
-| API Key | `api[_-]?key\s*[:=]\s*["'][^"']{16,}["']` | `api_key: "abc123..."` |
-| API Secret | `api[_-]?secret\s*[:=]\s*["'][^"']{8,}["']` | `api_secret: "xyz789..."` |
+| AWS Access Key (quoted) | `["'](?:AKIA|ABIA|ACCA)[0-9A-Z]{16}["']` | `"AKIAIOSFODNN7EXAMPLE"` |
+| API Key | `(?:api[_-]?key|apikey)\s*[:=]\s*["'][^"']{16,}["']` | `api_key: "abc123..."` |
+| API Secret | `(?:api[_-]?secret|apisecret)\s*[:=]\s*["'][^"']{8,}["']` | `api_secret: "xyz789..."` |
 | GitHub PAT | `ghp_[0-9a-zA-Z]{36}` | `ghp_ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefgh` |
 | GitHub OAuth | `gho_[0-9a-zA-Z]{36}` | `gho_ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefgh` |
 | GitHub User Token | `ghu_[0-9a-zA-Z]{36}` | `ghu_ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefgh` |
@@ -63,12 +66,12 @@ Pi Repomix includes built-in security scanning to detect sensitive data patterns
 | Google API Key | `AIza[0-9A-Za-z_-]{35}` | `AIzaSyA1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P` |
 | JWT Token | `eyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}` | `eyJhbGciOiJIUzI1NiIs...` |
 | Private Key | `-----BEGIN\s+(RSA\s+)?PRIVATE KEY-----` | `-----BEGIN RSA PRIVATE KEY-----` |
-| Password | `(password|passwd|pwd)\s*[:=]\s*["'][^"']{4,}["']` | `password: "mysecret123"` |
-| Database Password | `(DB_PASSWORD|DATABASE_PASSWORD|MYSQL_PASSWORD)\s*[:=]\s*["'][^"']+` | `DB_PASSWORD: "secret"` |
-| Connection String | `(mongodb|postgres|mysql|redis|amqp)://[^"'\s]+:[^"'\s]+@` | `mongodb://user:pass@host` |
+| Password | `(?:password|passwd|pwd)\s*[:=]\s*["'][^"']{4,}["']` | `password: "mysecret123"` |
+| Database Password | `(?:DB_PASSWORD|DATABASE_PASSWORD|MYSQL_PASSWORD)\s*[:=]\s*["'][^"']+` | `DB_PASSWORD: "secret"` |
+| Connection String | `(?:mongodb|postgres|mysql|redis|amqp)://[^"'\s]+:[^"'\s]+@` | `mongodb://user:pass@host` |
 | NPM Token | `npm_[A-Za-z0-9]{36}` | `npm_ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghij` |
-| Azure Secret | `azure[_-]?secret\s*[:=]\s*["'][^"']{8,}["']` | `azure_secret: "xyz789..."` |
-| Heroku API Key | `heroku:[0-9a-f]{8}-...` | `heroku:12345678-1234-1234-1234-123456789012` |
+| Azure Secret | `(?:azure[_-]?secret|azure[_-]?key)\s*[:=]\s*["'][^"']{8,}["']` | `azure_secret: "xyz789..."` |
+| Heroku API Key | `heroku:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}` | `heroku:12345678-1234-1234-1234-123456789012` |
 
 ### Medium Severity
 
@@ -81,7 +84,7 @@ Pi Repomix includes built-in security scanning to detect sensitive data patterns
 
 | Pattern | Regex | Example |
 |---------|-------|---------|
-| Potential Secret Key | `["'](sk|secret|token|key)[_-][a-zA-Z0-9]{20,}["']` | `"sk-secret-abcdefghij..."` |
+| Potential Secret Key | `["'](?:sk|secret|token|key)[_-][a-zA-Z0-9]{20,}["']` (case-insensitive) | `"sk-secret-abcdefghij..."` |
 
 ---
 

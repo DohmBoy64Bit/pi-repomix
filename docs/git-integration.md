@@ -73,7 +73,7 @@ Include recent commit history with file changes.
 
 1. Runs `git log --name-only -n<count>`
 2. Extracts commit date, message, and changed files
-3. Inserts commit entries at the beginning of output
+3. Inserts commit entries at the end of output, after all file contents
 
 ### Configuration
 
