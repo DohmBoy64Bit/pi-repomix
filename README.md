@@ -355,7 +355,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 <div align="center">
 
-**Built with ❤️ for the Pi agent ecosystem**
+Repository packing for AI agents
 
 [Report Issue](https://github.com/DohmBoy64Bit/pi-repomix/issues) • [Request Feature](https://github.com/DohmBoy64Bit/pi-repomix/issues)
 
