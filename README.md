@@ -317,6 +317,6 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 **Built with ❤️ for the Pi agent ecosystem**
 
-[Report Issue](https://github.com/yourusername/pi-repomix/issues) • [Request Feature](https://github.com/yourusername/pi-repomix/issues)
+[Report Issue](https://github.com/DohmBoy64Bit/pi-repomix/issues) • [Request Feature](https://github.com/DohmBoy64Bit/pi-repomix/issues)
 
 </div>
