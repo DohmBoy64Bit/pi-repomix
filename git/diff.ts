@@ -23,7 +23,7 @@ export function parseGitDiffOutput(diff: string): ParsedGitDiff[] {
 	let headerMatch;
 
 	while ((headerMatch = diffHeaderRegex.exec(diff)) !== null) {
-		const file = headerMatch[1];
+		const file = headerMatch[1] ?? headerMatch[2] ?? '';
 		const startPos = headerMatch.index;
 
 		// Find the next diff header or end of string (use a fresh regex to avoid state issues)
@@ -47,7 +47,7 @@ export function parseGitDiffOutput(diff: string): ParsedGitDiff[] {
 		const hunkRegex = /^@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@/gm;
 		let hunkMatch;
 		while ((hunkMatch = hunkRegex.exec(block)) !== null) {
-			const start = parseInt(hunkMatch[1], 10);
+			const start = parseInt(hunkMatch[1] ?? '0', 10);
 			const afterHunk = block.substring(hunkMatch.index + hunkMatch[0].length);
 			const lines = afterHunk.split('\n').slice(0, 10).map((l: string) => l);
 			hunks.push({ start, lines });
@@ -73,7 +73,7 @@ export function parseGitDiffStatOutput(stat: string): ParsedGitDiff[] {
 		// Handle rename: old.ts => new.ts
 		const renameMatch = file.match(/^(.+) => (.+) \|/);
 		if (renameMatch) {
-			file = renameMatch[2];
+			file = renameMatch[2] ?? file;
 		} else {
 			// Extract file from " file.ts | ..."
 			const pipeIdx = file.indexOf('|');

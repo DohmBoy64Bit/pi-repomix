@@ -1,16 +1,33 @@
 {
   "name": "pi-repomix",
   "version": "1.0.0",
-  "description": "Pi extension that replicates Repomix's full functionality for repository packing",
+  "description": "Pack repository contents into a single AI-friendly file. Supports compression, security scanning, git integration, and multiple output formats.",
+  "keywords": [
+    "pi-package",
+    "repomix",
+    "repository-packing",
+    "ai",
+    "llm",
+    "code-analysis"
+  ],
   "type": "module",
+  "homepage": "https://github.com/DohmBoy64Bit/pi-repomix",
+  "bugs": {
+    "url": "https://github.com/DohmBoy64Bit/pi-repomix/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DohmBoy64Bit/pi-repomix.git"
+  },
+  "license": "MIT",
+  "author": "DohmBoy64Bit",
   "pi": {
     "extensions": [
       "./index.ts"
     ]
   },
   "peerDependencies": {
-    "@earendil-works/pi-coding-agent": ">=0.84.0",
-    "@earendil-works/pi-tui": ">=0.84.0"
+    "@earendil-works/pi-coding-agent": "*"
   },
   "dependencies": {
     "@repomix/strip-comments": "^2.4.2",
@@ -20,9 +37,26 @@
     "json5": "^2.2.3",
     "minimatch": "^10.2.6"
   },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "prepublishOnly": "npm run build"
+  },
   "devDependencies": {
     "@types/node": "^24.13.6",
     "typescript": "^7.0.0",
     "vitest": "^5.0.1"
+  },
+  "files": [
+    "dist",
+    "index.ts",
+    "docs",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   }
 }

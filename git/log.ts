@@ -165,7 +165,7 @@ export function parseCommitLogWithFiles(output: string): GitLogCommit[] {
 				if (line.trim()) {
 					// Extract just the filename (after the status prefix, handling leading spaces)
 					const fileMatch = line.match(/^\s*[AMDRCU!?]+\s+(.+)$/);
-					if (fileMatch) {
+					if (fileMatch && fileMatch[1]) {
 						files.push(fileMatch[1].trim());
 					} else {
 						files.push(line.trim());

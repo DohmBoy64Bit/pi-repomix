@@ -232,7 +232,7 @@ function compressPython(content: string): string {
 
 		// Calculate indent level
 		const match = line.match(/^(\s*)/);
-		const spaces = match ? match[1].length : 0;
+		const spaces = match && match[1] ? match[1].length : 0;
 		const currentLevel = spaces / 4;
 
 		// Decrease indent level for dedented lines
@@ -878,7 +878,7 @@ function compressHTML(content: string): string {
 		// Preserve opening/closing tags structure
 		const tagMatch = trimmed.match(/<(\/?)(\w+)([^>]*)>/);
 		if (tagMatch) {
-			const [_, closing, tagName, attrs] = tagMatch;
+			const [_, closing, tagName = '', attrs] = tagMatch;
 			// Self-closing or void elements
 			const voidElements = new Set(["br", "hr", "img", "input", "meta", "link", "area", "base", "col", "embed", "source", "track", "wbr"]);
 			if (closing || voidElements.has(tagName.toLowerCase())) {
